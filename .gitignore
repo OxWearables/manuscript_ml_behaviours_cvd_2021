@@ -3,3 +3,5 @@
 data/*
 *data/*
 *.xlsx
+*.RDS
+.Rproj.user
