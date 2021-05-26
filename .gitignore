@@ -5,3 +5,6 @@ data/*
 *.xlsx
 *.RDS
 .Rproj.user
+*.svg
+*.png
+*.jpg
