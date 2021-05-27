@@ -1,3 +1,6 @@
 [submodule "clusterProcessing"]
 	path = clusterProcessing
 	url = git@github.com:activityMonitoring/clusterProcessing
+[submodule "biobankAccelerometerAnalysis"]
+	path = biobankAccelerometerAnalysis
+	url = git@github.com:activityMonitoring/biobankAccelerometerAnalysis
