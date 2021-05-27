@@ -1,0 +1,3 @@
+[submodule "clusterProcessing"]
+	path = clusterProcessing
+	url = git@github.com:activityMonitoring/clusterProcessing
