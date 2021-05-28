@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #$ -j y
-#$ -N .well.doherty.users.llz512.home.paperRW2021.classifierDevelopment.scripts.c24_processing_cmds_270521
+#$ -N c24_processing_cmds_270521
 #$ -P doherty.prjc -q short.qe
 #$ -t 1-152
-#$ -o /well/doherty/users/llz512/home/paperRW2021/classifierDevelopment/inputData/c24Processed/c24ProcessingLogs/
+#$ -o /well/doherty/users/llz512/home/paperRW2021/classifierDevelopment/inputData/c24Processed/data/clusterLogs/
 #$ -pe shmem 1
-#$ -cwd
+#$ -wd /well/doherty/users/llz512/home/paperRW2021/biobankAccelerometerAnalysis/
 
 module load Python/3.6.6-foss-2018b
 CPU_ARCHITECTURE=$(/apps/misc/utils/bin/get-cpu-software-architecture.py)
@@ -28,5 +28,5 @@ bash -c "$cmd"
 duration=$SECONDS
 echo "CPU time $pheno: $(($duration / 60)) min $((duration % 60)) sec"
 echo $(date +%d/%m/%Y\ %H:%M:%S)
-pip list > "/well/doherty/users/llz512/home/paperRW2021/classifierDevelopment/inputData/c24Processed/c24ProcessingLogs/.well.doherty.users.llz512.home.paperRW2021.classifierDevelopment.scripts.c24_processing_cmds_270521_${JOB_ID}_"`date +%Y-%m-%d-%H%M%S`"_pip_environment.txt"
-printenv > "/well/doherty/users/llz512/home/paperRW2021/classifierDevelopment/inputData/c24Processed/c24ProcessingLogs/.well.doherty.users.llz512.home.paperRW2021.classifierDevelopment.scripts.c24_processing_cmds_270521_${JOB_ID}_"`date +%Y-%m-%d-%H%M%S`"_run_environment.txt"
+pip list > "/well/doherty/users/llz512/home/paperRW2021/classifierDevelopment/inputData/c24Processed/data/clusterLogs/c24_processing_cmds_270521_${JOB_ID}_"`date +%Y-%m-%d-%H%M%S`"_pip_environment.txt"
+printenv > "/well/doherty/users/llz512/home/paperRW2021/classifierDevelopment/inputData/c24Processed/data/clusterLogs/c24_processing_cmds_270521_${JOB_ID}_"`date +%Y-%m-%d-%H%M%S`"_run_environment.txt"
