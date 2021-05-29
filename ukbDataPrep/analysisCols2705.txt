@@ -1,0 +1,183 @@
+# DEMOGRAPHICS 
+31 # sex.31
+34 # yearBirth.34
+52 # monthBirth.52
+21000 # ethnicity.21000
+
+# SAMPLING 
+53 # testCenDate.53
+54 # testCen.54
+
+# BIOMETRICS
+93 # systolicBP-manual.93
+94 # diastolicBP-manual.94
+4079 # diastolicBP-auto.4079
+4080 # systolicBP-auto.4080
+21001 # bmi.21001
+23099 # bodyFat.23099
+
+# SOCIOECONOMIC
+189 # townsendIndex.189
+738 # houseIncome.738
+845 # ageCompletedFullTimeEducation.845
+6138 # education.6138
+6142 # working.6142
+
+# SLEEP AND CIRCADIAN
+826 # shiftWork.826
+1160 # sleep.1160
+1170 # how_easy_to_get_up_in_morning
+1180 # morning/evening_person
+1190 # nap_during_day
+3426 # jobInvolveNightShiftWork.3426
+
+# BEHAVIOURAL 
+1558 # alcohol.1558
+20116 # smoke.20116
+
+# SR HEALTH 
+1930 # miserableness.1930
+2178 # overallHealth.2178
+2188 # disability.2188
+2443 # diabetesDiag.2443
+2453 # cancerDiag.2453
+2976 # ageDiabetesDiag.2976
+4041 # gestDiabOnly.4041
+6150 # heartProbs.6150
+6153 # cvdDiabMed.6153
+6177 # cvdDiabMed.6177
+20126 # bipolarDepressStatus.20126
+6150 # vascularProblemsDiagnosedByADoctor
+
+# ACCELEROMETRY
+110006 # accInviteDate.110006
+90010 # Starttime
+90011 # Endtime
+90012 # Overall_acceleration_average
+90015 # Data_quality, good_wear_time
+90016 # Data_quality, good_calibration
+90183 # Clips before calibration
+90185 # Clips after calibration
+90187 #	Total reads
+
+
+# DIET
+# DIET
+100002 # diet.100002
+1289 # Cooked_vegetable_intake
+1299 # Salad_/_raw_vegetable_intake
+1309 # Fresh_fruit_intake
+1319 # Dried_fruit_intake
+1329 # Oily_fish_intake
+1339 # Non-oily_fish_intake
+1349 # Processed_meat_intake
+1359 # Poultry_intake
+1369 # Beef_intake
+1379 # Lamb/mutton_intake
+1389 # Pork_intake
+3680 # Age_when_last_ate_meat
+6144 # Never_eat_eggs,_dairy,_wheat,_sugar
+10855 # Never_eat_eggs,_dairy,_wheat,_sugar_(pilot)
+1408 # Cheese_intake
+1418 # Milk_type_used
+1428 # Spread_type
+2654 # Non-butter_spread_type_details
+10767 # Spread_type_(pilot)
+1438 # Bread_intake
+1448 # Bread_type
+10776 # Bread_type/intake_(pilot)
+1458 # Cereal_intake
+1468 # Cereal_type
+1478 # Salt_added_to_food
+1488 # Tea_intake
+1498 # Coffee_intake
+1508 # Coffee_type
+1518 # Hot_drink_temperature
+1528 # Water_intake
+1538 # Major_dietary_changes_in_the_last_5_years
+1548 # Variation_in_diet
+
+
+# OTHER 
+# JULIA WAIBEL PROJECT 
+20001 # self-reported cancer code 
+2453 # cancer diagnosed by doctor
+21022 # age at recruitment
+22620 # job involved shift work (not all participants)
+20117 # alcohol
+3731 # alcohol
+20414 # alcohol
+1239 # smoking 
+20160 # smoking 
+104910 # moderate activity in dietary recall
+104920 # light activity in dietary recall
+100006 # saturated fat in dietary recall 
+100019 # carotene in dietary recall 
+104060 # vegetable intake in dierary recall
+2734 # Number of children 
+2764 # Age at first birth 
+2814 # ever HRT
+2784 # ever OCP 
+2714 # age at menarche
+3581 # age at menopause
+670 # type of accommodation
+6141 # how are people in household related to you
+20110 # mother's illnesses
+
+
+# LYNN ZHANG PROJECT
+48 # Waist circumference
+49 # Hip circumference
+26433 # IMD Access to services score (Scotland)
+26422 # IMD Access to services score (Wales)
+26425 # IMD Community safety score (Wales)
+26416 # IMD Crime score (England)
+26434 # IMD Crime score (Scotland)
+26414 # IMD Education score (England)
+26431 # IMD Education score (Scotland)
+26421 # IMD Education score (Wales)
+26412 # IMD Employment score (England)
+26429 # IMD Employment score (Scotland)
+26419 # IMD Employment score (Wales)
+26413 # IMD Health score (England)
+26430 # IMD Health score (Scotland)
+26420 # IMD Health score (Wales)
+26415 # IMD Housing score (England)
+26432 # IMD Housing score (Scotland)
+26423 # IMD Housing score (Wales)
+26411 # IMD Income score (England)
+26428 # IMD Income score (Scotland)
+26418 # IMD Income score (Wales)
+26410 # IMD Index of Multiple Deprivation (England)
+26427 # IMD Index of Multiple Deprivation (Scotland)
+26426 # IMD Index of Multiple Deprivation (Wales)
+26417 # IMD Living environment score (England)
+26424 # IMD Physical environment score (Wales)
+20161 # smoking pack years
+6154 # 	Medication for pain relief, constipation, heartburn
+10004 # Medication for pain relief, constipation, heartburn (pilot)
+10005 # Medication for smoking cessation, constipation, heartburn, allergies (pilot)	
+6155 # Vitamin and mineral supplements
+10723 # Vitamin supplements (pilot)
+20003 # Treatment/medication code
+20002 # Non cancer illness code
+3741 # Stomach/abdominal pain for 3+ months	
+21044 # Average number of times bowels opened per day
+21033 # Frequency of hard/lumpy stools in the last 3 months
+21034 # Frequency of loose/mushy/watery stools in the last 3 months
+21023 # When digestive health questionnaire completed	
+20004 # Operation code
+92 # Operation year/age first occurred	Operations  
+41272 # OPCS4
+41282 # OPCS4
+41273 # OPCS4
+41283 # OPCS4
+41200 # OPCS4
+41260 # OPCS4
+41210 # OPCS4
+41256 # OPCS4
+41257 # OPCS4
+41258 # OPCS4
+22040 # Overall MET minutes
+
+
