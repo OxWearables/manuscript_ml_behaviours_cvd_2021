@@ -4,3 +4,6 @@
 [submodule "biobankAccelerometerAnalysis"]
 	path = biobankAccelerometerAnalysis
 	url = git@github.com:activityMonitoring/biobankAccelerometerAnalysis
+[submodule "ukbDataPrep/ukb_download_and_prep_template"]
+	path = ukbDataPrep/ukb_download_and_prep_template
+	url = git@github.com:activityMonitoring/ukb_download_and_prep_template

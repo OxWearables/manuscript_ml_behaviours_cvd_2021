@@ -10,3 +10,4 @@ data/*
 *.jpg
 *-skylake*
 *terminal_history*
+*.Rhistory*
