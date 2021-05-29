@@ -1,0 +1,6 @@
+[submodule "ukbDataPrep/ukb_download_and_prep_template"]
+	path = ukbDataPrep/ukb_download_and_prep_template
+	url = git@github.com:activityMonitoring/ukb_download_and_prep_template
+[submodule "ukbDataPrep/ukbDataPrep/ukb_download_and_prep_template"]
+	path = ukbDataPrep/ukbDataPrep/ukb_download_and_prep_template
+	url = git@github.com:activityMonitoring/ukb_download_and_prep_template
