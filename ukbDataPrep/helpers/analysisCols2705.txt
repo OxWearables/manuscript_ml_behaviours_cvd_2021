@@ -125,7 +125,7 @@
 20110 # mother's illnesses
 
 
-# LYNN ZHANG PROJECT
+# LYNN ZHENG PROJECT
 48 # Waist circumference
 49 # Hip circumference
 26433 # IMD Access to services score (Scotland)

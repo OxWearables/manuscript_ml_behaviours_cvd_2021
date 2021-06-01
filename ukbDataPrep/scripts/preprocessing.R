@@ -2,7 +2,7 @@
 renv::init()
 
 # SET RUN NAME =======================================================================================
-name_of_current_run <- paste0(Sys.Date(), "_processing_")
+name_of_current_run <- paste0(Sys.Date(), "_processing_old_dates_")
 
 # LOAD TOOLS===========================================================================================
 library("data.table")
@@ -29,30 +29,41 @@ death_cause <-
 ## In these records, both records seem to be associated with the same date.
 ## Therefore, we only use one index per participant
 n_old <- nrow(death)
-death <- death[death$ins_index == 0,]
+death <- death[death$ins_index == 0, ]
 n_new <- nrow(death)
 print(paste0("There were ", n_old - n_new , " duplicate death records"))
 
 # READ IN PARTICIPANT DATA=============================================================================================
 participant <-
-  fread("ukbDataPrep/inputData/participant.csv",
-                   stringsAsFactors = FALSE, data.table = FALSE, check.names = TRUE, tz = "") # The data.table argument ensures read as data frame, check.names makes sure colnames syntactically valid
+  fread(
+    "ukbDataPrep/inputData/participant.csv",
+    stringsAsFactors = FALSE,
+    data.table = FALSE,
+    check.names = TRUE,
+    tz = ""
+  ) # The data.table argument ensures read as data frame, check.names makes sure colnames syntactically valid
 
 # PERFORM WITHDRAWALS============================================================================================
 w <-
   read.csv("ukbDataPrep/inputData/withdrawals-feb21.csv",
            header = FALSE)
-participant <- participant[!(participant$eid %in% w$V1), ]
+participant <- participant[!(participant$eid %in% w$V1),]
 
 # RESTRICT TO ONLY PARTICIPANTS WITH ACCELEROMETER DATA=============================================================================================
 participant <-
-  participant[as.character(participant$EndTimWear) != "", ]
+  participant[as.character(participant$EndTimWear) != "",]
 
-participant <- participant[!is.na(participant$EndTimWear) , ]
+participant <- participant[!is.na(participant$EndTimWear) ,]
 
 # READ IN ACCELEROMETER DATA==============================================================================================
-acc <- fread("ukbDataPrep/inputData/ukb-acc-sep.csv", #XXX EDIT THIS
-                   stringsAsFactors = FALSE, data.table = FALSE, check.names = TRUE, tz = "")
+acc <- fread(
+  "ukbDataPrep/inputData/ukb-acc-sep.csv",
+  #XXX EDIT THIS
+  stringsAsFactors = FALSE,
+  data.table = FALSE,
+  check.names = TRUE,
+  tz = ""
+)
 
 # MERGE===============================================================================================
 all <- merge(participant, acc, by = "eid", all.x = TRUE)
@@ -73,81 +84,52 @@ exclusions <-
 
 # REMOVE PARTICIPANTS WITH UNREALISTIC ACC DATA=============================================================================================
 # TODO DISCUSS
-# NOTE TO SELF: showcase variables for calibration included clips pre/post calibration
+# Use SHOWCASE VARIABLES FOR EXCLUSIONS
+
+exc <- all[(all$DatQualGoodCalibr != "Yes") ,]
+all <-
+  all[(all$DatQualGoodCalibr == "Yes"),]
+exclusions <-
+  rbind(
+    exclusions,
+    data.frame(
+      "Exclusion" = "Acc data could not be calibrated UKB",
+      "Number_excluded" = nrow(exc),
+      "Number_remaining" = nrow(all)
+    )
+  )
+
+exc <- all[(all$DatQualGoodWearTim != "Yes"),]
+all <-
+  all[(all$DatQualGoodWearTim == "Yes"),]
+exclusions <-
+  rbind(
+    exclusions,
+    data.frame(
+      "Exclusion" = "Poor wear time UKB",
+      "Number_excluded" = nrow(exc),
+      "Number_remaining" = nrow(all)
+    )
+  )
+
 exc <-
-  all[(all$quality.goodCalibration != 1) &
-        !(is.na(all$quality.goodCalibration)), ]
+  all[(all$clipsBeforeCalibration > 0.01 * all$totalReads) |
+        (all$clipsAfterCalibration > 0.01 * all$totalReads),]
 all <-
-  all[(all$quality.goodCalibration == 1), ]
+  all[(all$clipsBeforeCalibration <= 0.01 * all$totalReads) &
+        (all$clipsAfterCalibration <= 0.01 * all$totalReads),]
 exclusions <-
   rbind(
     exclusions,
     data.frame(
-      "Exclusion" = "Acc data could not be calibrated cluster",
+      "Exclusion" = "More than 1% clips before/after calibration",
       "Number_excluded" = nrow(exc),
       "Number_remaining" = nrow(all)
     )
   )
 
-exc <- all[(all$DatQualGoodCalibr != "Yes") , ]
-all <-
-  all[(all$DatQualGoodCalibr == "Yes"), ]
-exclusions <-
-  rbind(
-    exclusions,
-    data.frame(
-      "Exclusion" = "Acc data could not be calibrated",
-      "Number_excluded" = nrow(exc),
-      "Number_remaining" = nrow(all)
-    )
-  )
-
-exc <-
-  all[(all$quality.goodWearTime != 1) &
-        !(is.na(all$quality.goodWearTime)), ]
-all <-
-  all[(all$quality.goodWearTime == 1), ]
-exclusions <-
-  rbind(
-    exclusions,
-    data.frame(
-      "Exclusion" = "Poor wear time cluster",
-      "Number_excluded" = nrow(exc),
-      "Number_remaining" = nrow(all)
-    )
-  )
-message("You need to put wear time back in")
-#exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
-#all <-
-  #all[(all$DatQualGoodWearTim == "Yes"), ]
-#exclusions <-
- # rbind(
- #   exclusions,
-  #  data.frame(
-   #   "Exclusion" = "Insufficient wear time",
-    #  "Number_excluded" = nrow(exc),
-     # "Number_remaining" = nrow(all)
-   # )
- # )
-
-#exc <-
- # all[(all$clipsBeforeCalibration > 0.01 * all$totalReads) |
-#        (all$clipsAfterCalibration > 0.01 * all$totalReads), ]
-#all <-
-#  all[(all$clipsBeforeCalibration <= 0.01 * all$totalReads) &
-   #     (all$clipsAfterCalibration <= 0.01 * all$totalReads), ]
-#exclusions <-
- # rbind(
- #   exclusions,
-  #  data.frame(
-   #   "Exclusion" = "More than 1% clips before/after calibration",
-    #  "Number_excluded" = nrow(exc),
-   #   "Number_remaining" = nrow(all)
-   # )
- # )
-
-exc <- all[(all$acc.overall.avg >= 100), ]
-all <- all[(all$acc.overall.avg < 100), ]
+exc <- all[(all$acc.overall.avg >= 100),]
+all <- all[(all$acc.overall.avg < 100),]
 exclusions <-
   rbind(
     exclusions,
@@ -158,8 +140,8 @@ exclusions <-
     )
   )
 
-exc <- all[(is.na(all$MVPA)), ]
-all <- all[!(is.na(all$MVPA)), ]
+exc <- all[(is.na(all$MVPA)),]
+all <- all[!(is.na(all$MVPA)),]
 exclusions <-
   rbind(
     exclusions,
@@ -172,8 +154,8 @@ exclusions <-
 
 # REMOVE PREVALENT CASES===========================================================================================
 ## In HES data:
-exc <- all[all$CVD.prevalent != 0, ]
-all <- all[all$CVD.prevalent == 0, ]
+exc <- all[all$CVD.prevalent != 0,]
+all <- all[all$CVD.prevalent == 0,]
 
 exclusions <-
   rbind(
@@ -199,7 +181,7 @@ exc <-
     (
       all$Vascular.heartProblemDiagnosDoct_0_3  %in% c("Heart attack", "Stroke")
     )
-  ), ]
+  ),]
 
 all <-
   all[!((
@@ -214,7 +196,7 @@ all <-
     (
       all$Vascular.heartProblemDiagnosDoct_0_3  %in% c("Heart attack", "Stroke")
     )
-  ), ]
+  ),]
 exclusions <-
   rbind(
     exclusions,
@@ -232,28 +214,28 @@ all$died <- 0
 all$died[all$date_of_death != ""] <- 1
 
 # CHECK NO DUPLICATES====================================================================================================
-all <- all[!(is.na(all$eid)),]
+all <- all[!(is.na(all$eid)), ]
 if (nrow(all) != length(unique(all$eid))) {
   stop("There seem to be duplicates")
 
 }
 
 # ADD A COLUMN FOR CVD EVENTS FIRST RECORDED IN DEATH DATA ======================================================================================================
-candidate <- all[(all$died == 1) & (all$CVD.incident == 0), ]
-relevant_deaths <- death_cause[death_cause$eid %in% candidate$eid, ]
+candidate <- all[(all$died == 1) & (all$CVD.incident == 0),]
+relevant_deaths <- death_cause[death_cause$eid %in% candidate$eid,]
 CVD_death <-
   relevant_deaths[apply(relevant_deaths, 1, function(x)
-    any(grepl("I20|I21|I22|I23|I24|I25|I6", x))), ]
+    any(grepl("I20|I21|I22|I23|I24|I25|I6", x))),]
 all$CVD.incident_at_death <- 0
 all$CVD.incident_at_death[all$eid %in% CVD_death$eid] <- 1
 
 # ADD A COLUMN FOR ALL CVD DEATHS ====================================================================================================
-candidate_any_cv_death <- all[(all$died == 1), ]
+candidate_any_cv_death <- all[(all$died == 1),]
 relevant_deaths_any_cv_death <-
-  death_cause[death_cause$eid %in% candidate_any_cv_death$eid, ]
+  death_cause[death_cause$eid %in% candidate_any_cv_death$eid,]
 CVD_death_any_cv_death <-
   relevant_deaths_any_cv_death[apply(relevant_deaths_any_cv_death, 1, function(x)
-    any(grepl("I20|I21|I22|I23|I24|I25|I6", x))), ]
+    any(grepl("I20|I21|I22|I23|I24|I25|I6", x))),]
 
 
 # ADD CENSORING FOR MORTAILTY=====================================================================================================
@@ -263,7 +245,9 @@ all$follow_up_mortality[all$died == 1] <-
   pmin(all$follow_up_mortality[all$died == 1],
        as.Date(all$date_of_death[all$died == 1],  "%d/%m/%Y"))
 all$any_death_from_cvd <- 0
-all$any_death_from_cvd[(all$eid %in% CVD_death_any_cv_death$eid) & (all$follow_up_mortality != as.Date(all$censor_mortality, "%d/%m/%Y"))] <- 1 # Look into if I can do this more neatly to match later censoring
+all$any_death_from_cvd[(all$eid %in% CVD_death_any_cv_death$eid) &
+                         (all$follow_up_mortality != as.Date(all$censor_mortality, "%d/%m/%Y"))] <-
+  1 # Look into if I can do this more neatly to match later censoring
 
 # CREATE COLUMN OF COUNTRY===========================================================================================================
 all$country <- "England"
@@ -290,13 +274,13 @@ all$follow_up[all$died == 1] <-
 all$CVD_event <- 0
 
 # First process people who have incident CVD at death
-all_CVD_incident_at_death <- all[all$CVD.incident_at_death == 1, ]
+all_CVD_incident_at_death <- all[all$CVD.incident_at_death == 1,]
 CVs_at_death <-
   all_CVD_incident_at_death$eid[all_CVD_incident_at_death$follow_up == as.Date(all_CVD_incident_at_death$date_of_death,  "%d/%m/%Y")]
 all$CVD_event[all$eid %in% CVs_at_death] <- 1
 
 # Then process everyone else. We can't just take CVD.incident as the records in fact extend past the last known record.
-all_CVD_incident <- all[all$CVD.incident == 1, ]
+all_CVD_incident <- all[all$CVD.incident == 1,]
 CVs <-
   all_CVD_incident$eid[all_CVD_incident$follow_up == as.Date(all_CVD_incident$CVD,  "%Y-%m-%d")]
 all$CVD_event[all$eid %in% CVs] <- 1
@@ -320,7 +304,7 @@ all$neg_control_event_acc <- 0
 
 # We can't just take accidents_without_PA_link.incident as the records in fact extend past the last known record.
 all_neg_control_acc_incident <-
-  all[all$accidents_without_PA_link.incident == 1, ]
+  all[all$accidents_without_PA_link.incident == 1,]
 NCs <-
   all_neg_control_acc_incident$eid[all_neg_control_acc_incident$follow_up_neg_control_acc == as.Date(all_neg_control_acc_incident$accidents_without_PA_link,
                                                                                                      "%Y-%m-%d")]
@@ -348,7 +332,7 @@ all$time_in_study <- as.numeric(all$age_exit - all$age_entry)
 all$years_in_study <- all$time_in_study / (365.25)
 
 # CHECK NOONE ENTERED BEFORE EXIT
-if (length(all$eid[all$age_entry > all$age_exit]) != 0){
+if (length(all$eid[all$age_entry > all$age_exit]) != 0) {
   stop("Some participants seem to have entered the study after they exited it")
 }
 
@@ -627,10 +611,17 @@ all$alcohol <-
     )
   )
 # VARIABLES FOR EXCLUSIONS=============================================================================
+meds_list <- c("Blood pressure medication",
+               "Cholesterol lowering medication",
+               "Insulin")
 all$meds <-
-  all$MedCholesterolBloodPressDiabet %in% c("Blood pressure medication",
-                                            "Cholesterol lowering medication",
-                                            "Insulin")
+  all$MedCholesterolBloodPressDiabet_0_0 %in% meds_list |
+  all$MedCholesterolBloodPressDiabet_0_1 %in% meds_list |
+  all$MedCholesterolBloodPressDiabet_0_2 %in% meds_list |
+  all$MedCholesterolBloodPressDiabetTakExogHormon_0_0 %in% meds_list |
+  all$MedCholesterolBloodPressDiabetTakExogHormon_0_1 %in% meds_list |
+  all$MedCholesterolBloodPressDiabetTakExogHormon_0_2 %in% meds_list |
+  all$MedCholesterolBloodPressDiabetTakExogHormon_0_3 %in% meds_list
 all$poor_health <- all$OveralHealthRate == "Poor"
 all$any_previous_I_code <- all$all.cardiovascular.prevalent
 
@@ -683,19 +674,23 @@ all$alcohol <- relevel(all$alcohol, "3+ times per week")
 all$fruit_and_veg_cats <-
   relevel(all$fruit_and_veg_cats, "5-7.9 servings/day")
 all$oily_fish <- relevel(all$oily_fish, "< 1 time/week")
-all$education_cats <- relevel(all$education_cats, "Higher education")
+all$education_cats <-
+  relevel(all$education_cats, "Higher education")
 
 # EXCLUSIONS FOR MISSING DATA ============================================================================
 for (cov in c("sex", covs[covs != "TDI_quartiles"], "TownsendDeprIndexRecruit",  "BMI")) {
   print(cov)
   old <- nrow(all)
-  all <- all[!(is.na(all[, cov])|all[, cov] == ""),]
+  all <- all[!(is.na(all[, cov]) | all[, cov] == ""), ]
   print(old - nrow(all))
-  exclusions <- rbind(exclusions, data.frame(
-    "Exclusion" = paste0("Missing ", cov),
-    "Number_excluded" = old - nrow(all),
-    "Number_remaining" = nrow(all)
-  ))
+  exclusions <- rbind(
+    exclusions,
+    data.frame(
+      "Exclusion" = paste0("Missing ", cov),
+      "Number_excluded" = old - nrow(all),
+      "Number_remaining" = nrow(all)
+    )
+  )
 }
 
 
@@ -719,33 +714,43 @@ all_only_fu <- all
 all_only_fu$age_entry <-
   all_only_fu$age_entry + 365.25 * 2
 all_only_fu <-
-  all_only_fu[all_only_fu$age_entry < all_only_fu$age_exit, ]
+  all_only_fu[all_only_fu$age_entry < all_only_fu$age_exit,]
 
 all_sensitivity <- all_only_fu
-exclusions <- rbind(exclusions, data.frame(
-  "Exclusion" = paste0("Sensitivity: Removal of first 2 years of follow up"),
-  "Number_excluded" = nrow(all) - nrow(all_sensitivity),
-  "Number_remaining" = nrow(all_sensitivity)
-))
+exclusions <- rbind(
+  exclusions,
+  data.frame(
+    "Exclusion" = paste0("Sensitivity: Removal of first 2 years of follow up"),
+    "Number_excluded" = nrow(all) - nrow(all_sensitivity),
+    "Number_remaining" = nrow(all_sensitivity)
+  )
+)
 
 # Exclude on additional health-related factors
 for (cov in c("meds", "poor_health", "any_previous_I_code")) {
   name <- paste0("all_sensitivity_", cov)
   old <- nrow(all_sensitivity)
-  all_sensitivity <- all_sensitivity[!(all_sensitivity[, cov]),]
+  all_sensitivity <- all_sensitivity[!(all_sensitivity[, cov]), ]
   assign(name, all_sensitivity)
-  exclusions <- rbind(exclusions, data.frame(
-     "Exclusion" = paste0("Sensitivity: ", cov),
-     "Number_excluded" = old - nrow(all_sensitivity),
-     "Number_remaining" = nrow(all_sensitivity)))
+  exclusions <- rbind(
+    exclusions,
+    data.frame(
+      "Exclusion" = paste0("Sensitivity: ", cov),
+      "Number_excluded" = old - nrow(all_sensitivity),
+      "Number_remaining" = nrow(all_sensitivity)
+    )
+  )
 }
 # WRITE FILE DESCRIBING EXCLUSIONS =============================================================
-write.csv(exclusions, paste0("ukbDataPrep/plots/", name_of_current_run, "exclusions.csv"))
+write.csv(exclusions,
+          paste0("ukbDataPrep/plots/", name_of_current_run, "exclusions.csv"))
 
 # WRITE TO DATA FILES ===================================================================================
-analysis_name_of_current_run <- gsub("processing", "analysis", name_of_current_run)
+analysis_name_of_current_run <-
+  gsub("processing", "analysis", name_of_current_run)
 
-saveRDS(all,
+saveRDS(
+  all,
   paste0(
     "epiAnalysis/inputData/",
     analysis_name_of_current_run,
@@ -753,21 +758,23 @@ saveRDS(all,
   )
 )
 
-saveRDS(all_only_fu,
-    paste0(
-      "epiAnalysis/inputData/",
-      analysis_name_of_current_run,
-      "_only_fu.RDS"
-    )
+saveRDS(
+  all_only_fu,
+  paste0(
+    "epiAnalysis/inputData/",
+    analysis_name_of_current_run,
+    "_only_fu.RDS"
   )
+)
 
-saveRDS(all_sensitivity,
-    paste0(
-      "epiAnalysis/inputData/",
-      analysis_name_of_current_run,
-      "_sensitivity.RDS"
-    )
+saveRDS(
+  all_sensitivity,
+  paste0(
+    "epiAnalysis/inputData/",
+    analysis_name_of_current_run,
+    "_sensitivity.RDS"
   )
+)
 
 
 # OUTPUT DETAILS OF ENVIRONMENT===================================================================
