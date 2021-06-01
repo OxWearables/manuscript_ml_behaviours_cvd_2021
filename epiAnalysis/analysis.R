@@ -796,7 +796,7 @@ library(ggtern)
 df[, "PA"] <- df$LIPA + df$MVPA
 df[, "Sleep"] <- df$sleep
 
-p1 <- plot_confidence_region_ternary(
+p1 <- epicoda:::plot_confidence_region_ternary(
   data = df,
   parts_to_plot = c("Sleep", "SB", "PA"),
   mark_points = comp_mean(data = df, comp_labels = c("Sleep", "SB", "PA")),
@@ -825,7 +825,7 @@ df$indic <- quantcut(
 df_mini <- df[!(is.na(df$indic)) & (df$indic != "Neither"), ]
 df_mini$indic <- as.factor(as.character(df_mini$indic))
 
-p2 <- plot_confidence_region_ternary(
+p2 <- epicoda:::plot_confidence_region_ternary(
   data = df_mini,
   parts_to_plot = c("Sleep", "SB", "PA"),
   groups = c("indic"),
@@ -846,7 +846,7 @@ p2
 dev.off()
 
 svg(
-  paste0(epiAnalysis/"plots/",
+  paste0("epiAnalysis/plots/",
          name_of_current_run,
          "simplex_plots.svg",
          sep = ""),

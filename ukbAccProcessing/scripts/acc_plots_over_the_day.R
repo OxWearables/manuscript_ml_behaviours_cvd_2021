@@ -1,6 +1,7 @@
 # LOAD PACKAGES AND HELPER FUNCTIONS; NAME RUN
 library(ggplot2)
-source("useful_functions/average_day_plot.R")
+library(data.table)
+source("ukbAccProcessing/useful_functions/average_day_plot.R")
 name_of_current_run <- paste0(Sys.Date(), "_analysis_old_dates_")
 
 # LOAD DATA
@@ -40,12 +41,12 @@ svg(
     "_face_validity.svg",
     sep = ""
   ),
-  width = 6,
-  height = 8
+  width = 10,
+  height = 4
 )
 
 gridExtra::grid.arrange(
   grobs = list(p_MVPA, p_light, p_sedentary, p_sleep),
-  layout_matrix = cbind(c(4, 3, 2, 1))
+  layout_matrix = cbind(c(4, 3), c(2, 1))
 )
 dev.off()

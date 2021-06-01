@@ -10,7 +10,7 @@
 6. Run classifierDevelopment/scripts/reportingPerformance/check_precision_and_recall.R
 7. Run ukbAccProcessing/scripts/acc_plots_over_the_day.R
 8. Commit again to make sure lockfile correctly recorded.
-
+9. Run final section of epiAnalysis/analysis.R involving ggtern package. 
 
 # Additional Results Generated in Python 
 
