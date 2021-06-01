@@ -19,6 +19,205 @@
         "icd9": "-" , 
 	"level": "all"
 
+    }, 
+   {
+        "disease": "breast_cancer", 
+ 	"desc": "For Julia Waibel", 
+        "icd10": "C50",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "cancer_invasive_or_breast", 
+ 	"desc": "For Julia Waibel", 
+        "icd10": "C[0-3]|C4[0-3]|C4[5-9]|C[5-9]|D05",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "diverticular_disease_all", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K57",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K570", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K570",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K571", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K571,
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K572", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K572,
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K573", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K573,
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+ {
+        "disease": "K574", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K574,
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K575", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K575,
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K578", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K578,
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K579", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K579",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K590", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K590",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K591", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K591",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "colon_cancer", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "C18",
+        "icd9": "-" , 
+	"level": "all"
+    }
+, 
+   {
+        "disease": "rectal_cancer", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "C19|C20",
+        "icd9": "-" , 
+	"level": "all"
+    }, 
+   {
+        "disease": "non_specific_intestinal_cancer", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "C260|C269",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "Inflammatory_Bowel_Disease", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K5[0-2]",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "colon_polyp", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K635",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K638", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K638",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "K639", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K639",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "ischemic_colitis", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K5[0-2]",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "infective_colitis", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "A09",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "pelvic_inflammatory_disease", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "N70|N73|N74",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "vascular_disorders_of_intestine_K550_K559", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K550|K559",
+        "icd9": "-" , 
+	"level": "all"
+
+    }, 
+   {
+        "disease": "chronic_vascular_disorders_of_intestine_bleeding", 
+ 	"desc": "For Lynn Zheng", 
+        "icd10": "K551|K552",
+        "icd9": "-" , 
+	"level": "all"
+
     }
 
 ]
