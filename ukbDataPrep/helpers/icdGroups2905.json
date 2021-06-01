@@ -55,7 +55,7 @@
    {
         "disease": "K571", 
  	"desc": "For Lynn Zheng", 
-        "icd10": "K571,
+        "icd10": "K571",
         "icd9": "-" , 
 	"level": "all"
 
@@ -63,7 +63,7 @@
    {
         "disease": "K572", 
  	"desc": "For Lynn Zheng", 
-        "icd10": "K572,
+        "icd10": "K572",
         "icd9": "-" , 
 	"level": "all"
 
@@ -71,7 +71,7 @@
    {
         "disease": "K573", 
  	"desc": "For Lynn Zheng", 
-        "icd10": "K573,
+        "icd10": "K573",
         "icd9": "-" , 
 	"level": "all"
 
@@ -79,7 +79,7 @@
  {
         "disease": "K574", 
  	"desc": "For Lynn Zheng", 
-        "icd10": "K574,
+        "icd10": "K574",
         "icd9": "-" , 
 	"level": "all"
 
@@ -87,7 +87,7 @@
    {
         "disease": "K575", 
  	"desc": "For Lynn Zheng", 
-        "icd10": "K575,
+        "icd10": "K575",
         "icd9": "-" , 
 	"level": "all"
 
@@ -95,7 +95,7 @@
    {
         "disease": "K578", 
  	"desc": "For Lynn Zheng", 
-        "icd10": "K578,
+        "icd10": "K578",
         "icd9": "-" , 
 	"level": "all"
 
