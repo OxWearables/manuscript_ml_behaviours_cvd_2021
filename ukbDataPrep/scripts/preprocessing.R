@@ -2,7 +2,7 @@
 renv::init()
 
 # SET RUN NAME =======================================================================================
-name_of_current_run <- paste0(Sys.Date(), "_processing_")
+name_of_current_run <- paste0(Sys.Date(), "_processing_old_dates_")
 
 # LOAD TOOLS===========================================================================================
 library("data.table")
@@ -73,21 +73,7 @@ exclusions <-
 
 # REMOVE PARTICIPANTS WITH UNREALISTIC ACC DATA=============================================================================================
 # TODO DISCUSS
-# NOTE TO SELF: showcase variables for calibration included clips pre/post calibration
-exc <-
-  all[(all$quality.goodCalibration != 1) &
-        !(is.na(all$quality.goodCalibration)), ]
-all <-
-  all[(all$quality.goodCalibration == 1), ]
-exclusions <-
-  rbind(
-    exclusions,
-    data.frame(
-      "Exclusion" = "Acc data could not be calibrated cluster",
-      "Number_excluded" = nrow(exc),
-      "Number_remaining" = nrow(all)
-    )
-  )
+# Use SHOWCASE VARIABLES FOR EXCLUSIONS
 
 exc <- all[(all$DatQualGoodCalibr != "Yes") , ]
 all <-
@@ -96,55 +82,40 @@ exclusions <-
   rbind(
     exclusions,
     data.frame(
-      "Exclusion" = "Acc data could not be calibrated",
+      "Exclusion" = "Acc data could not be calibrated UKB",
       "Number_excluded" = nrow(exc),
       "Number_remaining" = nrow(all)
     )
   )
+
+exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
+all <-
+all[(all$DatQualGoodWearTim == "Yes"), ]
+exclusions <-
+rbind(
+  exclusions,
+ data.frame(
+  "Exclusion" = "Poor wear time UKB",
+ "Number_excluded" = nrow(exc),
+"Number_remaining" = nrow(all)
+)
+)
 
 exc <-
-  all[(all$quality.goodWearTime != 1) &
-        !(is.na(all$quality.goodWearTime)), ]
+all[(all$clipsBeforeCalibration > 0.01 * all$totalReads) |
+       (all$clipsAfterCalibration > 0.01 * all$totalReads), ]
 all <-
-  all[(all$quality.goodWearTime == 1), ]
+ all[(all$clipsBeforeCalibration <= 0.01 * all$totalReads) &
+    (all$clipsAfterCalibration <= 0.01 * all$totalReads), ]
 exclusions <-
-  rbind(
-    exclusions,
-    data.frame(
-      "Exclusion" = "Poor wear time cluster",
-      "Number_excluded" = nrow(exc),
-      "Number_remaining" = nrow(all)
-    )
-  )
-message("You need to put wear time back in")
-#exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
-#all <-
-  #all[(all$DatQualGoodWearTim == "Yes"), ]
-#exclusions <-
- # rbind(
- #   exclusions,
-  #  data.frame(
-   #   "Exclusion" = "Insufficient wear time",
-    #  "Number_excluded" = nrow(exc),
-     # "Number_remaining" = nrow(all)
-   # )
- # )
-
-#exc <-
- # all[(all$clipsBeforeCalibration > 0.01 * all$totalReads) |
-#        (all$clipsAfterCalibration > 0.01 * all$totalReads), ]
-#all <-
-#  all[(all$clipsBeforeCalibration <= 0.01 * all$totalReads) &
-   #     (all$clipsAfterCalibration <= 0.01 * all$totalReads), ]
-#exclusions <-
- # rbind(
- #   exclusions,
-  #  data.frame(
-   #   "Exclusion" = "More than 1% clips before/after calibration",
-    #  "Number_excluded" = nrow(exc),
-   #   "Number_remaining" = nrow(all)
-   # )
- # )
+rbind(
+  exclusions,
+ data.frame(
+  "Exclusion" = "More than 1% clips before/after calibration",
+ "Number_excluded" = nrow(exc),
+  "Number_remaining" = nrow(all)
+)
+)
 
 exc <- all[(all$acc.overall.avg >= 100), ]
 all <- all[(all$acc.overall.avg < 100), ]
