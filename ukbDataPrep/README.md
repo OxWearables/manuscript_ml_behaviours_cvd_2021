@@ -11,8 +11,8 @@ This subfolder contains materials related to preprocessing and merging UK Bioban
 
 ## Processing
 
-Columns were extracted 29.05.21 using: 
-`../ukb_download_and_prep_template/download/helpers/linux_tools/ukbconv inputData/ukb41733.enc_ukb csv -ianalysisCols2705.txt` (analysisCols2705.txt can now be found in the `helpers` subfolder. 
+Columns were extracted 01.06.21 using: 
+`../ukb_download_and_prep_template/download/helpers/linux_tools/ukbconv inputData/ukb41733.enc_ukb csv -ihelpers/analysisCols2705.txt`  
 
 HES files were merged on 29.05.21 using: 
 `python ../ukb_download_and_prep_template/download/download_health_data/mergeHESfiles.py inputData/hesin.txt inputData/hesin_diag.txt inputData/hesin_all.csv`
@@ -25,6 +25,6 @@ The columns.json file generated was subsequently moved to helpers and amended to
 - Remove columns unavailable to us: 26429, 22040, 3581, 1498
 
 The data was then processed using: 
-`python ../ukb_download_and_prep_template/filterUKB.py inputData/ukb41733.csv -o inputData/ukb41733_recoded_010621.csv --columnsFile helpers/columns.json`
+`python ../ukb_download_and_prep_template/filterUKB.py inputData/ukb41733.csv -o inputData/ukb41733_recoded_010621.csv --columnsFile helpers/columns.json --datafile ../ukb_download_and_prep_template/Data_Dictionary_Showcase.csv --codefile ../ukb_download_and_prep_template/Codings_Showcase.csv`
 
 `python ../ukb_download_and_prep_template/addNewHES.py inputData/ukb41733_recoded_010621.csv inputData/hesin_all.csv inputData/participant.csv helpers/icdGroups2905.json --incident_prevalent True --date_column EndTimWear`

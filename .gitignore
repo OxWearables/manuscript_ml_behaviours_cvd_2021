@@ -9,5 +9,6 @@ data/*
 *.png
 *.jpg
 *-skylake*
+*-ivybridge*
 *terminal_history*
 *.Rhistory*
