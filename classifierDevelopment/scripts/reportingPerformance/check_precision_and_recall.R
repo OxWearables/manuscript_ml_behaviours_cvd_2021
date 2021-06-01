@@ -4,9 +4,9 @@ library(data.table)
 library(ggplot2)
 df_all <-
   data.frame(fread(
-    "classifierDevelopment/inputData/sep20_LOO_classification.csv"# "J:/data_and_prep_utilities/59070_application/training_data_classification_reports/sep20acc.csv"
+    "classifierDevelopment/inputData/sep20_LOO_classification.csv"
   )) # change the data here
-name_of_current_run <- paste0(Sys.Date(), "_analysis_")
+name_of_current_run <- paste0(Sys.Date(), "_analysis_old_dates_")
 
 #==============================================================================================
 # SET UP DATA FRAME FOR RECORDING RESULTS

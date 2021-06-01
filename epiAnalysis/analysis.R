@@ -3,7 +3,7 @@
 renv::init()
 
 ## Set run name -------------------------------------------------------------
-name_of_current_run <- paste0(Sys.Date(), "_analysis_")
+name_of_current_run <- paste0(Sys.Date(), "_analysis_old_dates_")
 
 ## Load packages -----------------------------------------------------------
 library(survival)

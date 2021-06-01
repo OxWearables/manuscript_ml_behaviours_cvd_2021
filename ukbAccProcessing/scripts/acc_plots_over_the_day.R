@@ -1,16 +1,16 @@
 # LOAD PACKAGES AND HELPER FUNCTIONS; NAME RUN
 library(ggplot2)
 source("useful_functions/average_day_plot.R")
-name_of_current_run <- paste0(Sys.Date(), "_analysis_")
+name_of_current_run <- paste0(Sys.Date(), "_analysis_old_dates_")
 
 # LOAD DATA
 a <-
   data.frame(
     fread(
-     "ukbAccProcessing/inputData/sep20-summary-all.csv" "J:\\data_and_prep_utilities\\59070_application\\accelerometer-data\\sep20-summary-all.csv"
+     "ukbAccProcessing/inputData/sep20-summary-all.csv"
     )
   ) # all acc data
-df <- readRDS(# analyic dataset
+df <- readRDS(# analytic dataset
   paste0(
     "epiAnalysis/inputData/",
     name_of_current_run,
