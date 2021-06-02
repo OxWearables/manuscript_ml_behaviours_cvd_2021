@@ -1,5 +1,5 @@
 # SET NAME OF CURRENT RUN==============================================
-name_of_current_run <- paste0(Sys.Date(), "_full_run_")
+name_of_current_run <- paste0(Sys.Date(), "_paper_run_")
 
 # SET UP FUNCTIONS FOR SINKING CONSOLE OUTPUT AND CLEARING AFTER EACH================================
 open_sinks <- function(filestart){
@@ -9,10 +9,12 @@ open_sinks <- function(filestart){
   sink(msg_file, append = TRUE, type = "message") # Writing console output to log file
 }
 
+env <- environment() # need to record environment to be able to clear it - this changes when sourcing the file.
+
 reset_for_next <- function(){
   sink()
   sink(type = "message")
-  rm(list = ls(.GlobalEnv)[!(ls(.GlobalEnv) %in% c("name_of_current_run", "reset_for_next", "open_sinks"))], envir = .GlobalEnv)
+  rm(list = ls(env)[!(ls(env) %in% c("name_of_current_run", "reset_for_next", "open_sinks", "env"))], envir = env)
 }
 
 # PREPROCESSING========================================================
