@@ -6,7 +6,7 @@ df_all <-
   data.frame(fread(
     "classifierDevelopment/inputData/sep20_LOO_classification.csv"
   )) # change the data here
-name_of_current_run <- paste0(Sys.Date(), "_analysis_old_dates_")
+name_of_current_run <- paste0(Sys.Date(), "_analysis_new_dates_")
 
 #==============================================================================================
 # SET UP DATA FRAME FOR RECORDING RESULTS

@@ -2,7 +2,7 @@
 renv::init()
 
 # SET RUN NAME =======================================================================================
-name_of_current_run <- paste0(Sys.Date(), "_processing_old_dates_")
+name_of_current_run <- paste0(Sys.Date(), "_processing_new_dates_")
 
 # LOAD TOOLS===========================================================================================
 library("data.table")
@@ -234,15 +234,14 @@ CVD_death_any_cv_death <-
 
 
 # ADD CENSORING FOR MORTAILTY=====================================================================================================
-all$censor_mortality <- "31/07/2020"
+all$censor_mortality <- "28/02/2021"
 all$follow_up_mortality <- as.Date(all$censor_mortality, "%d/%m/%Y")
 all$follow_up_mortality[all$died == 1] <-
   pmin(all$follow_up_mortality[all$died == 1],
        as.Date(all$date_of_death[all$died == 1],  "%d/%m/%Y"))
 all$any_death_from_cvd <- 0
 all$any_death_from_cvd[(all$eid %in% CVD_death_any_cv_death$eid) &
-                         (all$follow_up_mortality != as.Date(all$censor_mortality, "%d/%m/%Y"))] <-
-  1
+                         (all$follow_up_mortality != as.Date(all$censor_mortality, "%d/%m/%Y"))] <- 1
 
 # CREATE COLUMN OF COUNTRY===========================================================================================================
 all$country <- "England"
@@ -253,11 +252,10 @@ all$country[(all$UkBiobankAssessCent == "Cardiff") |
               (all$UkBiobankAssessCent == "Wrexham")] <- "Wales"
 
 # ADD CENSORING DATES FOR HES DATA BY COUNTRY============================================================================================================================
-all$censored <- "30/06/2020"
-all$censored[all$country == "Scotland"] <- "31/10/2016"
-all$censored[all$country == "Wales"] <- "29/02/2016"
+all$censored <- "28/02/2021"
+all$censored[all$country == "Wales"] <- "28/02/2018"
 
-# ADD DATE OF LAST COMPLETE FOLLOW UP FOR CVD ( WITH COMPLETEFOLLOW UP IN ALL RECORDS)=================================================================================================================================
+# ADD DATE OF LAST COMPLETE FOLLOW UP FOR CVD ( WITH COMPLETE FOLLOW UP IN ALL RECORDS)=================================================================================================================================
 all$follow_up <-
   as.Date(all$censored, "%d/%m/%Y") # censor at this date as after this date while there may be data it is incomplete
 all$follow_up[all$CVD.incident == 1] <-
