@@ -12,7 +12,7 @@ open_sinks <- function(filestart){
 reset_for_next <- function(){
   sink()
   sink(type = "message")
-  rm(list = setdiff(ls(), "name_of_current_run"))
+  rm(list = setdiff(ls(), "name_of_current_run", "reset_for_next", "open_sinks"))
 }
 reset_for_next()
 
