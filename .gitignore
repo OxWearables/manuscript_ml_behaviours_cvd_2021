@@ -16,3 +16,4 @@ data/*
 *console_output*
 *output.txt
 */*/*output.txt
+*.html
