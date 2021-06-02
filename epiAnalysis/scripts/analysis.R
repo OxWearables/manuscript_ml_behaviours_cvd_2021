@@ -731,7 +731,7 @@ if (!isTRUE(all.equal(s_comp_new, rep(1, length.out = length(s_comp_new))))){
 
 ## Check all compositions in list have sum to 24
 for (i in comp_list) {
-  if (sum(i) != 24){
+  if (!(isTRUE(all.equal(sum(i),24)))){
     stop("There was an error in the production of comp_list for the forest plot")
   }
 }
