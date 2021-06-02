@@ -1,7 +1,4 @@
 # Preparation----------------------------------------------------------------
-## Initiate environment to snapshot packages---------------------------------
-renv::init()
-
 ## Set run name -------------------------------------------------------------
 name_of_current_run <- paste0(Sys.Date(), "_analysis_new_dates_")
 

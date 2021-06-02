@@ -1,6 +1,3 @@
-# INITIATE ENVIRONMENT TO SNAPSHOT PACKAGES ==========================================================
-renv::init()
-
 # SET RUN NAME =======================================================================================
 name_of_current_run <- paste0(Sys.Date(), "_processing_new_dates_")
 
