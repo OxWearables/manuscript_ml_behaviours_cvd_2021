@@ -12,9 +12,8 @@ open_sinks <- function(filestart){
 reset_for_next <- function(){
   sink()
   sink(type = "message")
-  rm(list = setdiff(ls(), "name_of_current_run", "reset_for_next", "open_sinks"))
+  rm(list = ls(.GlobalEnv)[!(ls(.GlobalEnv) %in% c("name_of_current_run", "reset_for_next", "open_sinks"))], envir = .GlobalEnv)
 }
-reset_for_next()
 
 # PREPROCESSING========================================================
 open_sinks("ukbDataPrep/plots/")
