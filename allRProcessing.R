@@ -1,5 +1,5 @@
 # SET NAME OF CURRENT RUN==============================================
-name_of_current_run <- paste0(Sys.Date(), "_paper_run_")
+name_of_current_run <- paste0(Sys.Date(), "_manuscript_ready_run_")
 
 # SET UP FUNCTIONS FOR SINKING CONSOLE OUTPUT AND CLEARING AFTER EACH================================
 open_sinks <- function(filestart){
