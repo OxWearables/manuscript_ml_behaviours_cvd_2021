@@ -20,26 +20,26 @@ d38Plus = pd.read_csv(overall + "predictions/may21_restrictedToOver38s.csv")
 
 # Get only older ids 
 pids = dDem["pid"][dDem["age"] >=38]
-dReportingRest = dClassic[dClassic["participant"].isin(pids)]
+dReportingRestricted = dClassic[dClassic["participant"].isin(pids)]
 
 # Print participant numbers
-print(len(dClassic["participant"].unique))
-print(len(dReportingRest["participant"].unique))
-print(len(d38Plus["participant"].unique))
+print(len(dClassic["participant"].unique()))
+print(len(dReportingRestricted["participant"].unique()))
+print(len(d38Plus["participant"].unique()))
 
 # Report 
-perParticipantSummaryHTML(dClassic, "label", "predicted", "participant", overall_out + rec_date + "_overall_summary.html")
-perParticipantSummaryHTML(dReportingRest, "label", "predicted", "participant", overall_out + rec_date + "_restricted_reporting_summary.html")
-perParticipantSummaryHTML(d38Plus, "label", "predicted", "participant", overall_out + rec_date + "_restricted_training_summary.html")
+accClassification.perParticipantSummaryHTML(dClassic, "label", "predicted", "participant", overall_out + rec_date + "_overall_summary.html")
+accClassification.perParticipantSummaryHTML(dReportingRestricted, "label", "predicted", "participant", overall_out + rec_date + "_restricted_reporting_summary.html")
+accClassification.perParticipantSummaryHTML(d38Plus, "label", "predicted", "participant", overall_out + rec_date + "_restricted_training_summary.html")
 
 
 # Also do comparison with overall precision and recall using cutpoint
 dTraining = pd.read_csv(overall + "training_data/sep20-c24-modvig-light-sed-sleep.csv") 
 dTraining["predicted_by_cutpoint"] = "nonMVPA"
-dTraining["predicted_by_cutpoint"][d["enmoTrunc"] > 0.1] = "MVPA" 
+dTraining.loc[dTraining["enmoTrunc"] > 0.1 , "predicted_by_cutpoint"] = "MVPA" 
 dTraining["label_twoway"] = "nonMVPA"
-dTraining["label_twoway"][dTraining["label"] == "MVPA"] = "MVPA"
+dTraining.loc[dTraining["label"] == "MVPA", "label_twoway"] = "MVPA"
 
-perParticipantSummaryHTML(dTraining, "label_twoway", "predicted_by_cutpoint", "participant", overall_out + rec_date + "_cutpoint_summary.html")
+accClassification.perParticipantSummaryHTML(dTraining, "label_twoway", "predicted_by_cutpoint", "participant", overall_out + rec_date + "_cutpoint_summary.html")
 print(metrics.classification_report(dTraining["label_twoway"], dTraining["predicted_by_cutpoint"]))
 
