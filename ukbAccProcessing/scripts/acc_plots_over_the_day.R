@@ -1,16 +1,16 @@
 # LOAD PACKAGES AND HELPER FUNCTIONS; NAME RUN
 library(ggplot2)
-source("useful_functions/average_day_plot.R")
-name_of_current_run <- paste0(Sys.Date(), "_analysis_")
+library(data.table)
+source("ukbAccProcessing/useful_functions/average_day_plot.R")
 
 # LOAD DATA
 a <-
   data.frame(
     fread(
-     "ukbAccProcessing/inputData/sep20-summary-all.csv" "J:\\data_and_prep_utilities\\59070_application\\accelerometer-data\\sep20-summary-all.csv"
+     "ukbAccProcessing/inputData/sep20-summary-all.csv"
     )
   ) # all acc data
-df <- readRDS(# analyic dataset
+df <- readRDS(# analytic dataset
   paste0(
     "epiAnalysis/inputData/",
     name_of_current_run,
@@ -40,12 +40,12 @@ svg(
     "_face_validity.svg",
     sep = ""
   ),
-  width = 6,
-  height = 8
+  width = 10,
+  height = 4
 )
 
 gridExtra::grid.arrange(
   grobs = list(p_MVPA, p_light, p_sedentary, p_sleep),
-  layout_matrix = cbind(c(4, 3, 2, 1))
+  layout_matrix = cbind(c(4, 3), c(2, 1))
 )
 dev.off()

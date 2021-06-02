@@ -13,3 +13,6 @@ data/*
 *-ivybridge*
 *terminal_history*
 *.Rhistory*
+*console_output*
+*output.txt
+*/*/*output.txt

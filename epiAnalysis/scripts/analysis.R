@@ -1,10 +1,4 @@
 # Preparation----------------------------------------------------------------
-## Initiate environment to snapshot packages---------------------------------
-renv::init()
-
-## Set run name -------------------------------------------------------------
-name_of_current_run <- paste0(Sys.Date(), "_analysis_")
-
 ## Load packages -----------------------------------------------------------
 library(survival)
 library(Epi)
@@ -13,7 +7,7 @@ library(gtools)
 library(EValue)
 library(xts)
 library(ggplot2)
-library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "68c9564015d29b45fdf22c7a20ae0bdd2c1fc947", build_opts = c("--no-resave-data"), build_vignettes = TRUE, build_manual = TRUE)
+library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda")
 
 ## Source helper functions---------------------------------------------------
 source("epiAnalysis/useful_functions/med_and_iqr.R")
@@ -366,6 +360,7 @@ summary(linear_ism)
 cox.zph(minimally_adjusted_model)
 cox.zph(main_model)
 cox.zph(add_adj_bmi_model)
+cox.zph(zf_model)
 cox.zph(only_fu_model)
 cox.zph(main_sensitivity_model)
 cox.zph(women_model)
@@ -376,6 +371,8 @@ cox.zph(neg_control_model)
 cox.zph(linear_ism)
 
 plot(cox.zph(main_model))
+plot(cox.zph(zf_model))
+plot(cox.zph(linear_ism))
 
 ## Summarise models -----------------------------------------------------------------
 summary(main_model)
@@ -784,88 +781,4 @@ for (behaviour in comp_labels) {
   print(12 * 60 * (quantile(df[, behaviour], probs = 0.75) - quantile(df[, behaviour], probs = 0.25)))
 }
 
-# ggtern plotting----------------------------------------------------------------------------------------------------------
-## Setup ggtern ------------------------------------------------------------
-stop(
-  "Loading ggtern suppresses printing of ggplot plots so do not run this until all else has run."
-)
-install.packages("ggtern")
-library(ggtern)
 
-## Plot data on simplex ------------------------------------------------
-df[, "PA"] <- df$LIPA + df$MVPA
-df[, "Sleep"] <- df$sleep
-
-p1 <- plot_confidence_region_ternary(
-  data = df,
-  parts_to_plot = c("Sleep", "SB", "PA"),
-  mark_points = comp_mean(data = df, comp_labels = c("Sleep", "SB", "PA")),
-  probs = c(0.25, 0.5, 0.75),
-  suppress_legend = TRUE
-)
-
-svg(
-  paste0("epiAnalysis/plots/",
-         name_of_current_run,
-         "simplex_plot.svg",
-         sep = ""),
-  width = 15,
-  height = 10
-)
-p1
-dev.off()
-
-
-## Plot data on simplex by overall activity ----------------------------
-df$indic <- quantcut(
-  df$acc.overall.avg,
-  q = c(0, 0.05, 0.95, 1),
-  labels = c("Least active 5%", "Neither", "Most active 5%")
-)
-df_mini <- df[!(is.na(df$indic)) & (df$indic != "Neither"), ]
-df_mini$indic <- as.factor(as.character(df_mini$indic))
-
-p2 <- plot_confidence_region_ternary(
-  data = df_mini,
-  parts_to_plot = c("Sleep", "SB", "PA"),
-  groups = c("indic"),
-  probs = c(0.25, 0.5, 0.75),
-  suppress_legend = TRUE
-)
-svg(
-  paste0(
-    "epiAnalysis/plots/",
-    name_of_current_run,
-    "simplex_plot_split.svg",
-    sep = ""
-  ),
-  width = 15,
-  height = 10
-)
-p2
-dev.off()
-
-svg(
-  paste0(epiAnalysis/"plots/",
-         name_of_current_run,
-         "simplex_plots.svg",
-         sep = ""),
-  width = 30,
-  height = 10
-)
-ggtern::grid.arrange(
-  grobs = list(p1, p2),
-  widths = c(1, 1),
-  heights = c(1),
-  layout_matrix = rbind(c(1, 2))
-)
-dev.off()
-
-# Output details of environment -----------------------------------------------------------
-renv::snapshot(
-  paste0(
-    "epiAnalysis/plots/",
-    name_of_current_run,
-    "_epi_analysis_environment.lock"
-  )
-)
