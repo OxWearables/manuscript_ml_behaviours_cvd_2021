@@ -15,3 +15,4 @@ data/*
 *.Rhistory*
 *console_output*
 *output.txt
+*/*/*output.txt
