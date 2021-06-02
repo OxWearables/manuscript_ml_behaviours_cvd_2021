@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.3",
+    "Version": "4.0.5",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -188,14 +188,14 @@
       "Package": "epicoda",
       "Version": "0.0.0.9000",
       "Source": "GitHub",
-      "Remotes": "tystan/deltacomp",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "epicoda",
       "RemoteUsername": "activityMonitoring",
+      "RemoteRepo": "epicoda",
       "RemoteRef": "HEAD",
-      "RemoteSha": "68c9564015d29b45fdf22c7a20ae0bdd2c1fc947",
-      "Hash": "20b3a90309b258ad807388990847404b"
+      "RemoteSha": "39527042864ecbc9385feaf68b055ecebdc75c4b",
+      "RemoteHost": "api.github.com",
+      "Remotes": "tystan/deltacomp",
+      "Hash": "b58bd77f1b2986302af482b09b4a26b5"
     },
     "etm": {
       "Package": "etm",

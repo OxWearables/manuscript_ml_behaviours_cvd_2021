@@ -3,13 +3,13 @@ name_of_current_run <- paste0(Sys.Date(), "_paper_ready_run_")
 
 # PREPROCESSING========================================================
 sink(paste0("ukbDataPrep/plots/", name_of_current_run, "_console_ouput.txt"), append = TRUE, type = "output") # Writing console output to log file
-source("ukbDataPrep/preprocessing.R")
+source("ukbDataPrep/scripts/preprocessing.R")
 sink()
 rm(list = setdiff(ls(), "name_of_current_run"))
 
 # MAIN ANALYSIS========================================================
 sink(paste0("epiAnalysis/plots/", name_of_current_run, "_console_ouput.txt"), append = TRUE, type = "output") # Writing console output to log file
-source("epiAnalysis/analysis.R")
+source("epiAnalysis/scripts/analysis.R")
 sink()
 rm(list = setdiff(ls(), "name_of_current_run"))
 
@@ -25,7 +25,7 @@ sink()
 rm(list = setdiff(ls(), "name_of_current_run"))
 
 sink(paste0("epiAnalysis/plots/", name_of_current_run, "_ggtern_console_ouput.txt"), append = TRUE, type = "output") # Writing console output to log file
-source("epiAnalysis/ggtern_plots.R")
+source("epiAnalysis/scripts/ggtern_plots.R")
 sink()
 rm(list = setdiff(ls(), "name_of_current_run"))
 
