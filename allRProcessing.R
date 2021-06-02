@@ -1,10 +1,10 @@
 # SET NAME OF CURRENT RUN==============================================
-name_of_current_run <- paste0(Sys.Date(), "_paper_ready_run_")
+name_of_current_run <- paste0(Sys.Date(), "_full_run_")
 
 # SET UP FUNCTIONS FOR SINKING CONSOLE OUTPUT AND CLEARING AFTER EACH================================
 open_sinks <- function(filestart){
-  output_file <- file(paste0(filestart, name_of_current_run, "_console_output.txt"), open = "a")
-  msg_file <- file(paste0(filestart, name_of_current_run, "_message_output.txt"), open = "a")
+  output_file <- file(paste0(filestart, name_of_current_run, "console_output.txt"), open = "a")
+  msg_file <- file(paste0(filestart, name_of_current_run, "message_output.txt"), open = "a")
   sink(output_file, append = TRUE, type = "output") # Writing console output to log file
   sink(msg_file, append = TRUE, type = "message") # Writing console output to log file
 }
