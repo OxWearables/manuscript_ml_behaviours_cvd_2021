@@ -2,7 +2,6 @@
 library(ggplot2)
 library(data.table)
 source("ukbAccProcessing/useful_functions/average_day_plot.R")
-name_of_current_run <- paste0(Sys.Date(), "_analysis_new_dates_")
 
 # LOAD DATA
 a <-

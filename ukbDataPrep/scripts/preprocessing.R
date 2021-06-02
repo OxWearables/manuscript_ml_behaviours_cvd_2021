@@ -736,14 +736,11 @@ write.csv(exclusions,
           paste0("ukbDataPrep/plots/", name_of_current_run, "exclusions.csv"))
 
 # WRITE TO DATA FILES ===================================================================================
-analysis_name_of_current_run <-
-  gsub("processing", "analysis", name_of_current_run)
-
 saveRDS(
   all,
   paste0(
     "epiAnalysis/inputData/",
-    analysis_name_of_current_run,
+    name_of_current_run,
     "_ready_to_use.RDS"
   )
 )
@@ -752,7 +749,7 @@ saveRDS(
   all_only_fu,
   paste0(
     "epiAnalysis/inputData/",
-    analysis_name_of_current_run,
+    name_of_current_run,
     "_only_fu.RDS"
   )
 )
@@ -761,17 +758,8 @@ saveRDS(
   all_sensitivity,
   paste0(
     "epiAnalysis/inputData/",
-    analysis_name_of_current_run,
+    name_of_current_run,
     "_sensitivity.RDS"
   )
 )
 
-
-# OUTPUT DETAILS OF ENVIRONMENT===================================================================
-renv::snapshot(
-  lockfile = paste0(
-    "ukbDataPrep/plots/",
-    name_of_current_run,
-    "_R_ukbDataPrep_environment.lock"
-  )
-)
