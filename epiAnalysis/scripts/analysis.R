@@ -18,30 +18,24 @@ source("epiAnalysis/useful_functions/compare_plot3.R")
 source("epiAnalysis/useful_functions/compare_plot_linear.R")
 
 ## Load data ---------------------------------------------------------------
-df <-  readRDS(
-  paste0(
-    "epiAnalysis/inputData/",
-    name_of_current_run,
-    "_ready_to_use.RDS"
-  )
-)
+df <-  readRDS(paste0(
+  "epiAnalysis/inputData/",
+  name_of_current_run,
+  "_ready_to_use.RDS"
+))
 
 df_only_fu <-
- readRDS(
-    paste0(
-      "epiAnalysis/inputData/",
-      name_of_current_run,
-      "_only_fu.RDS"
-    )
-  )
+  readRDS(paste0(
+    "epiAnalysis/inputData/",
+    name_of_current_run,
+    "_only_fu.RDS"
+  ))
 df_sensitivity <-
-  readRDS(
-    paste0(
-      "epiAnalysis/inputData/",
-      name_of_current_run,
-      "_sensitivity.RDS"
-    )
-  )
+  readRDS(paste0(
+    "epiAnalysis/inputData/",
+    name_of_current_run,
+    "_sensitivity.RDS"
+  ))
 
 
 ## Set up values used throughout for comp_labels and covariates--------------------------------------------------------------------
@@ -223,7 +217,7 @@ death_model <- comp_model(
 ## Participants without zero values ---------------------------------------
 df_zf <- df
 for (label in comp_labels) {
-  df_zf <- df_zf[df_zf[, label] != 0, ]
+  df_zf <- df_zf[df_zf[, label] != 0,]
 }
 zf_model <- comp_model(
   type = "cox",
@@ -270,8 +264,8 @@ main_sensitivity_model <-
   )
 
 ## Women, men---------------------------------------------------------
-df_women <- df[df$sex == "Female",]
-df_men <- df[df$sex == "Male",]
+df_women <- df[df$sex == "Female", ]
+df_men <- df[df$sex == "Male", ]
 
 women_model <-  comp_model(
   type = "cox",
@@ -301,8 +295,8 @@ men_model <- comp_model(
 )
 
 ## Younger, older-------------------------------------------------------
-df_under_65 <- df[df$age_entry < 365.25 * 65,]
-df_over_65 <- df[df$age_entry > 365.25 * 65,]
+df_under_65 <- df[df$age_entry < 365.25 * 65, ]
+df_over_65 <- df[df$age_entry > 365.25 * 65, ]
 
 under_65_model <- comp_model(
   type = "cox",
@@ -404,7 +398,216 @@ tab_coef$Estimate <- new_tab_coef_col
 tab_coef$Variable <- rownames(tab_coef)
 tab_coef <- tab_coef[, c("Variable", "Estimate")]
 write.csv(tab_coef,
-          paste0("epiAnalysis/plots/", name_of_current_run, "model_params.csv"))
+          paste0(
+            "epiAnalysis/plots/",
+            name_of_current_run,
+            "model_params.csv"
+          ))
+
+minimally_adjusted_tc <-
+  tab_coefs(
+    type = "cox",
+    scale_type = "exp" ,
+    covariates = c("strata(sex)"),
+    outcome = Surv(
+      time = df$age_entry,
+      time2 = df$age_exit,
+      event = df$CVD_event
+    ),
+    data = df,
+    comp_labels = comp_labels,
+    rounded_zeroes = TRUE
+  )
+
+
+add_adj_bmi_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex)", covs, "BMI"),
+  outcome = Surv(
+    time = df$age_entry,
+    time2 = df$age_exit,
+    event = df$CVD_event
+
+  ),
+  data = df,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+death_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex)", covs),
+  outcome = Surv(
+    time = df$age_entry,
+    time2 = df$age_exit_mortality,
+    event = df$any_death_from_cvd
+
+  ),
+  data = df,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+zf_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex)", covs),
+  outcome = Surv(
+    time = df_zf$age_entry,
+    time2 = df_zf$age_exit,
+    event = df_zf$CVD_event
+  ),
+  data = df_zf,
+  comp_labels = comp_labels,
+  rounded_zeroes = FALSE
+)
+
+only_fu_tc <-
+  tab_coefs(
+    type = "cox",
+    scale_type = "exp" ,
+    covariates = c("strata(sex)", covs),
+    outcome = Surv(
+      time = df_only_fu$age_entry,
+      time2 = df_only_fu$age_exit,
+      event = df_only_fu$CVD_event
+
+    ),
+    data = df_only_fu,
+    comp_labels = comp_labels,
+    rounded_zeroes = TRUE
+  )
+
+main_sensitivity_tc <-
+  tab_coefs(
+    type = "cox",
+    scale_type = "exp" ,
+    covariates = c("strata(sex)", covs),
+    outcome = Surv(
+      time = df_sensitivity$age_entry,
+      time2 = df_sensitivity$age_exit,
+      event = df_sensitivity$CVD_event
+
+    ),
+    data = df_sensitivity,
+    comp_labels = comp_labels,
+    rounded_zeroes = TRUE
+  )
+
+women_tc <-  tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c(covs),
+  outcome = Surv(
+    time = df_women$age_entry,
+    time2 = df_women$age_exit,
+    event = df_women$CVD_event
+
+  ),
+  data = df_women,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+men_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c(covs),
+  outcome = Surv(
+    time = df_men$age_entry,
+    time2 = df_men$age_exit,
+    event = df_men$CVD_event
+  ),
+  data = df_men,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+under_65_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex)", covs),
+  outcome = Surv(
+    time = df_under_65$age_entry,
+    time2 = df_under_65$age_exit,
+    event = df_under_65$CVD_event
+
+  ),
+  data = df_under_65,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+over_65_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex)", covs),
+  outcome = Surv(
+    time = df_over_65$age_entry,
+    time2 = df_over_65$age_exit,
+    event = df_over_65$CVD_event
+
+  ),
+  data = df_over_65,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+neg_control_tc <-
+  tab_coefs(
+    type = "cox",
+    scale_type = "exp" ,
+    covariates = c("strata(sex)", covs) ,
+    outcome = Surv(
+      time = df$age_entry,
+      time2 = df$neg_control_acc_exit,
+      event = df$neg_control_event_acc,
+    ),
+    data = df,
+    comp_labels = comp_labels,
+    rounded_zeroes = TRUE
+  )
+
+model_list <-
+  list(
+    "minimally_adjusted",
+    "add_adj_bmi",
+    "death",
+    "women",
+    "men",
+    "under_65",
+    "over_65",
+    "only_fu",
+    "main_sensitivity",
+    "zf",
+    "neg_control"
+  )
+
+tab_coef_coords <- tab_coef[(nrow(tab_coef) - 3): nrow(tab_coef), ]
+for (model in model_list) {
+  tc <- get(paste0(model, "_tc"))
+  mod <- get(paste0(model, "_model"))
+  new_tab_coef_col <-
+    paste0(
+      format(round(tc$fit, digits = 2), nsmall = 2),
+      " (",
+      format(round(tc$`2.5 %`, digits = 2), nsmall = 2),
+      ", ",
+      format(round(tc$`97.5 %`, digits = 2), nsmall = 2),
+      ")"
+    )
+  tab_coef_coords[, paste0("Estimate: ", model)] <- new_tab_coef_col[(length(new_tab_coef_col) - 3):length(new_tab_coef_col) ]
+
+  # Visual test
+  print(summary(mod)$conf.int["ilr_1_sleep_vs_parts_2_to_4", "exp(coef)"])
+  print(tc$fit[nrow(tc)-3])
+}
+
+write.csv(tab_coef,
+          paste0("epiAnalysis/plots/", name_of_current_run, "all_model_params.csv"))
+
 
 # Plotting ----------------------------------------------------------------
 ## Forest plots ------------------------------------------------------------
@@ -414,7 +617,8 @@ cm_df <-
       model = main_model,
       comp_labels = comp_labels,
       transf_labels = tl
-    )$cm  )
+    )$cm
+  )
 change_list <- list(list("MVPA", 20 / 60),
                     list("LIPA", 1),
                     list("SB", 1),
@@ -443,10 +647,12 @@ names(comp_list) <-
   )
 
 svg(
-  paste0("epiAnalysis/plots/",
-         name_of_current_run,
-         "_figure_4.svg",
-         sep = ""),
+  paste0(
+    "epiAnalysis/plots/",
+    name_of_current_run,
+    "_figure_4.svg",
+    sep = ""
+  ),
   width = 13,
   height = 10
 )
@@ -547,7 +753,17 @@ dev.off()
 ## Matrix plots: model comparison-----------------------------------------
 ### Set up a data frame which will hold key numbers----------------------
 numbers_df <- data.frame(matrix(nrow = 0, ncol = 8))
-colnames(numbers_df) <- c("Model", "n", "n_event", "CM: Sleep", "CM: SB", "CM: LIPA", "CM: MVPA", "CM: MVPA (min/day)")
+colnames(numbers_df) <-
+  c(
+    "Model",
+    "n",
+    "n_event",
+    "CM: Sleep",
+    "CM: SB",
+    "CM: LIPA",
+    "CM: MVPA",
+    "CM: MVPA (min/day)"
+  )
 
 ### Iterate over model pairs generating the relevant plot and adding detail to numbers_df -------------------
 model_pair_list <-
@@ -568,13 +784,30 @@ for (pair in model_pair_list) {
   mlist <- list(model1, model2)
 
   # Write main components of df
-  for (i in c(1, 2)){
+  for (i in c(1, 2)) {
     model <- mlist[[i]]
     name <- pair[[i]]
 
-    cm_hrs <- get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm*24
-    cm_mins <- get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm*24*60
-    numbers_df <- rbind(numbers_df, data.frame("Model" = name, "n" = model$n, "n_event"= model$nevent, "CM: Sleep" = cm_hrs$sleep, "CM: SB" = cm_hrs$SB, "CM: LIPA" = cm_hrs$LIPA, "CM: MVPA" = cm_hrs$MVPA, "CM: MVPA (min/day)" = cm_mins$MVPA))
+    cm_hrs <-
+      get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm *
+      24
+    cm_mins <-
+      get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm *
+      24 * 60
+    numbers_df <-
+      rbind(
+        numbers_df,
+        data.frame(
+          "Model" = name,
+          "n" = model$n,
+          "n_event" = model$nevent,
+          "CM: Sleep" = cm_hrs$sleep,
+          "CM: SB" = cm_hrs$SB,
+          "CM: LIPA" = cm_hrs$LIPA,
+          "CM: MVPA" = cm_hrs$MVPA,
+          "CM: MVPA (min/day)" = cm_mins$MVPA
+        )
+      )
   }
 
   # Save plot
@@ -635,13 +868,30 @@ dev.off()
 ### Write these models into df of numbers
 mlist <- list(only_fu_model, main_sensitivity_model)
 pair <- list("only_fu", "main_sensitivity")
-for (i in c(1, 2)){
+for (i in c(1, 2)) {
   model <- mlist[[i]]
   name <- pair[[i]]
 
-  cm_hrs <- get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm*24
-  cm_mins <- get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm*24*60
-  numbers_df <- rbind(numbers_df, data.frame("Model" = name, "n" = model$n, "n_event"= model$nevent, "CM: Sleep" = cm_hrs$sleep, "CM: SB" = cm_hrs$SB, "CM: LIPA" = cm_hrs$LIPA, "CM: MVPA" = cm_hrs$MVPA, "CM: MVPA (min/day)" = cm_mins$MVPA))
+  cm_hrs <-
+    get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm *
+    24
+  cm_mins <-
+    get_cm_from_model(model, comp_labels = comp_labels, transf_labels = tl)$cm *
+    24 * 60
+  numbers_df <-
+    rbind(
+      numbers_df,
+      data.frame(
+        "Model" = name,
+        "n" = model$n,
+        "n_event" = model$nevent,
+        "CM: Sleep" = cm_hrs$sleep,
+        "CM: SB" = cm_hrs$SB,
+        "CM: LIPA" = cm_hrs$LIPA,
+        "CM: MVPA" = cm_hrs$MVPA,
+        "CM: MVPA (min/day)" = cm_mins$MVPA
+      )
+    )
 }
 
 ### Do plot with linear model--------------------------------------------------------------------------------------------
@@ -671,18 +921,52 @@ compare_all_transfers_ism_side_by_side(
 dev.off()
 
 ### Write numbers_df --------------------------------------------------
-write.csv(numbers_df, paste0("epiAnalysis/plots/", name_of_current_run, "details_for_plots.csv"))
+write.csv(
+  numbers_df,
+  paste0(
+    "epiAnalysis/plots/",
+    name_of_current_run,
+    "details_for_plots.csv"
+  )
+)
 
 # Other numbers for paper-------------------------------------------------------------
 ## Specific_predictions ---------------------------------------------------------------
-cm <- get_cm_from_model(model = main_model, comp_labels = comp_labels, transf_labels = tl)$cm
+cm <-
+  get_cm_from_model(model = main_model,
+                    comp_labels = comp_labels,
+                    transf_labels = tl)$cm
 new <-
   rbind(
     cm,
-    change_composition(cm, main_part = "SB", at_expense_of = "LIPA", main_change = 1/24, comp_labels = comp_labels),
-    change_composition(cm, main_part = "LIPA", at_expense_of = "SB", main_change = 1/24, comp_labels = comp_labels),
-    change_composition(cm, main_part = "SB", at_expense_of = "MVPA", main_change = 0.25/24, comp_labels = comp_labels),
-    change_composition(cm, main_part = "MVPA", at_expense_of = "SB", main_change = 0.25/24, comp_labels = comp_labels)
+    change_composition(
+      cm,
+      main_part = "SB",
+      at_expense_of = "LIPA",
+      main_change = 1 / 24,
+      comp_labels = comp_labels
+    ),
+    change_composition(
+      cm,
+      main_part = "LIPA",
+      at_expense_of = "SB",
+      main_change = 1 / 24,
+      comp_labels = comp_labels
+    ),
+    change_composition(
+      cm,
+      main_part = "SB",
+      at_expense_of = "MVPA",
+      main_change = 0.25 / 24,
+      comp_labels = comp_labels
+    ),
+    change_composition(
+      cm,
+      main_part = "MVPA",
+      at_expense_of = "SB",
+      main_change = 0.25 / 24,
+      comp_labels = comp_labels
+    )
   )
 preds <-  predict_fit_and_ci(
   model =  main_model,
@@ -691,9 +975,23 @@ preds <-  predict_fit_and_ci(
   units = "hr/day"
 )
 preds <- preds[, c("fit", "lower_CI", "upper_CI")]
-rownames(preds) <- c("Compositional mean", "1 hr/day SB from LIPA", "1 hr/day LIPA from SB", "15 min/day SB from MVPA", "15 min/day MVPA from SB")
+rownames(preds) <-
+  c(
+    "Compositional mean",
+    "1 hr/day SB from LIPA",
+    "1 hr/day LIPA from SB",
+    "15 min/day SB from MVPA",
+    "15 min/day MVPA from SB"
+  )
 p <- format(round(preds, digits = 2), nsmall = 2)
-write.csv(p, paste0("epiAnalysis/plots/", name_of_current_run, "number_for_substitutions.csv"))
+write.csv(
+  p,
+  paste0(
+    "epiAnalysis/plots/",
+    name_of_current_run,
+    "number_for_substitutions.csv"
+  )
+)
 
 ## Proportion explained ----------------------------------------------------------------------
 mm <- predict_fit_and_ci(main_model,
@@ -705,39 +1003,53 @@ bmi_adj <- predict_fit_and_ci(add_adj_bmi_model,
                               comp_labels = comp_labels,
                               terms = TRUE)
 
-d <- rbind(mm[, c("fit", "lower_CI", "upper_CI")], bmi_adj[, c("fit", "lower_CI", "upper_CI")])
+d <-
+  rbind(mm[, c("fit", "lower_CI", "upper_CI")], bmi_adj[, c("fit", "lower_CI", "upper_CI")])
 rownames(d) <- c("Main model", "Additionally adjusted for BMI")
-write.csv(d, paste0("epiAnalysis/plots/", name_of_current_run, "_model_preds.csv"))
+write.csv(d,
+          paste0(
+            "epiAnalysis/plots/",
+            name_of_current_run,
+            "_model_preds.csv"
+          ))
 bmi_adj <- bmi_adj['fit']
 mm <- mm['fit']
 (log(mm) - log(bmi_adj)) / log(mm)
 
+## Years of follow up-------------------------------------------------------
+df$years_fu <- as.numeric(df$age_exit - df$age_entry) / 365.25
+sum(df$years_fu)
+median(df$years_fu)
+max(df$years_fu)
+
 # Miscellaneous checks ----------------------------------------------------
 ## No duplicate participants
-if (nrow(df)!= length(unique(df$eid))){
+if (nrow(df) != length(unique(df$eid))) {
   stop("There is not one row per participant")
 }
 
 ## Check data format as expected
 s_comp <- as.vector(apply(df[, comp_labels], 1, sum))
-if (!isTRUE(all.equal(s_comp, rep(1, length.out = length(s_comp)), tolerance = 1e-5))){
+if (!isTRUE(all.equal(s_comp, rep(1, length.out = length(s_comp)), tolerance = 1e-5))) {
   stop("Check input data: compositions not specified in proportion-of-one-day format.")
 }
 
 s_comp_new <- as.vector(apply(new[, comp_labels], 1, sum))
-if (!isTRUE(all.equal(s_comp_new, rep(1, length.out = length(s_comp_new))))){
-  stop("Check newly generated data for predictions: compositions not specified in proportion-of-one-day format.")
+if (!isTRUE(all.equal(s_comp_new, rep(1, length.out = length(s_comp_new))))) {
+  stop(
+    "Check newly generated data for predictions: compositions not specified in proportion-of-one-day format."
+  )
 }
 
 ## Check all compositions in list have sum to 24
 for (i in comp_list) {
-  if (!(isTRUE(all.equal(sum(i),24)))){
+  if (!(isTRUE(all.equal(sum(i), 24)))) {
     stop("There was an error in the production of comp_list for the forest plot")
   }
 }
 
 ## Check different methods of calculating same mean concur
-if (!isTRUE(all.equal(cm_from_df/24, cm))){
+if (!isTRUE(all.equal(cm_from_df / 24, cm))) {
   stop("Different methods of calculating compositional mean do not agree")
 }
 ## Check results would be similar: using simple adjustment for age, using simple adjustment for sex
@@ -780,5 +1092,3 @@ for (behaviour in comp_labels) {
   print(12 * (quantile(df[, behaviour], probs = 0.75) - quantile(df[, behaviour], probs = 0.25)))
   print(12 * 60 * (quantile(df[, behaviour], probs = 0.75) - quantile(df[, behaviour], probs = 0.25)))
 }
-
-
