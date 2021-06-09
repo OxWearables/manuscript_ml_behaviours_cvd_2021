@@ -7,7 +7,7 @@ library(gtools)
 library(EValue)
 library(xts)
 library(ggplot2)
-library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda")
+library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "add-support-for-multiple-strata")
 
 ## Source helper functions---------------------------------------------------
 source("epiAnalysis/useful_functions/med_and_iqr.R")
@@ -199,6 +199,34 @@ add_adj_bmi_model <-   comp_model(
   rounded_zeroes = TRUE
 )
 
+add_adj_bmi_cat_model <-   comp_model(
+  type = "cox",
+  covariates = c("strata(sex)", covs, "BMI_cats") ,
+  outcome = Surv(
+    time = df$age_entry,
+    time2 = df$age_exit,
+    event = df$CVD_event
+
+  ),
+  data = df,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+add_adj_bmi_strat_model <-   comp_model(
+  type = "cox",
+  covariates = c("strata(sex, BMI_cats_coarse)", covs) ,
+  outcome = Surv(
+    time = df$age_entry,
+    time2 = df$age_exit,
+    event = df$CVD_event
+
+  ),
+  data = df,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
 ## Mortality outcome ------------------------------------------------------
 death_model <- comp_model(
   type = "cox",
@@ -354,6 +382,8 @@ summary(linear_ism)
 cox.zph(minimally_adjusted_model)
 cox.zph(main_model)
 cox.zph(add_adj_bmi_model)
+cox.zph(add_adj_bmi_cat_model)
+cox.zph(add_adj_bmi_strat_model)
 cox.zph(zf_model)
 cox.zph(only_fu_model)
 cox.zph(main_sensitivity_model)
@@ -424,6 +454,36 @@ add_adj_bmi_tc <- tab_coefs(
   type = "cox",
   scale_type = "exp" ,
   covariates = c("strata(sex)", covs, "BMI"),
+  outcome = Surv(
+    time = df$age_entry,
+    time2 = df$age_exit,
+    event = df$CVD_event
+
+  ),
+  data = df,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+add_adj_bmi_cat_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex)", covs, "BMI_cats_coarse"),
+  outcome = Surv(
+    time = df$age_entry,
+    time2 = df$age_exit,
+    event = df$CVD_event
+
+  ),
+  data = df,
+  comp_labels = comp_labels,
+  rounded_zeroes = TRUE
+)
+
+add_adj_bmi_strat_tc <- tab_coefs(
+  type = "cox",
+  scale_type = "exp" ,
+  covariates = c("strata(sex, BMI_cats_coarse)", covs),
   outcome = Surv(
     time = df$age_entry,
     time2 = df$age_exit,
@@ -605,7 +665,7 @@ for (model in model_list) {
   print(tc$fit[nrow(tc)-3])
 }
 
-write.csv(tab_coef,
+write.csv(tab_coef_coords,
           paste0("epiAnalysis/plots/", name_of_current_run, "all_model_params.csv"))
 
 
@@ -772,10 +832,13 @@ model_pair_list <-
     list("women", "men"),
     list("main", "minimally_adjusted"),
     list("main", "add_adj_bmi"),
+    list("main", "add_adj_bmi_cat"),
+    list("main", "add_adj_bmi_strat"),
     list("main", "death"),
     list("main", "zf"),
     list("main", "neg_control")
   )
+
 
 for (pair in model_pair_list) {
   # Get models

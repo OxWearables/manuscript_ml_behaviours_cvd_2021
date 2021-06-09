@@ -642,6 +642,12 @@ all$BMI_cats <-
     breaks = c(0, 18.5, 25, 30, 10000),
     labels = c("Underweight", "Normal weight", "Overweight", "Obese")
   )
+all$BMI_cats_coarse <-
+  cut(
+    all$BMI,
+    breaks = c(0, 25, 30, 10000),
+    labels = c("Normal Weight or Underweight", "Overweight", "Obese")
+  )
 
 # Add age categories
 all$age_cats <-
