@@ -18,3 +18,4 @@ data/*
 */*/*output.txt
 writing
 *.html
+epiAnalysis/scripts/checking_coxzph_error.R
