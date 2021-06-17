@@ -22,15 +22,28 @@ d38Plus = pd.read_csv(overall + "predictions/may21_restrictedToOver38s.csv")
 pids = dDem["pid"][dDem["age"] >=38]
 dReportingRestricted = dClassic[dClassic["participant"].isin(pids)]
 
+# Get only women/men
+pidsw = dDem["pid"][dDem["sex"]=="F"]
+pidsm = dDem["pid"][dDem["sex"]=="M"]
+dReportingWomen = dClassic[dClassic["participant"].isin(pidsw)]
+dReportingMen = dClassic[dClassic["participant"].isin(pidsm)]
+
 # Print participant numbers
 print(len(dClassic["participant"].unique()))
 print(len(dReportingRestricted["participant"].unique()))
 print(len(d38Plus["participant"].unique()))
+print(len(dReportingWomen["participant"].unique()))
+print(len(dReportingMen["participant"].unique()))
 
 # Report 
 accClassification.perParticipantSummaryHTML(dClassic, "label", "predicted", "participant", overall_out + rec_date + "_overall_summary.html")
 accClassification.perParticipantSummaryHTML(dReportingRestricted, "label", "predicted", "participant", overall_out + rec_date + "_restricted_reporting_summary.html")
 accClassification.perParticipantSummaryHTML(d38Plus, "label", "predicted", "participant", overall_out + rec_date + "_restricted_training_summary.html")
+accClassification.perParticipantSummaryHTML(dReportingWomen, "label", "predicted", "participant", overall_out +
+             rec_date + "_women_reporting_summary.html")
+accClassification.perParticipantSummaryHTML(dReportingMen, "label", "predicted", "participant", overall_out +
+             rec_date + "_men_reporting_summary.html")
+print(metrics.classification_report(dClassic["label"], dClassic["predicted"]))
 
 
 # Also do comparison with overall precision and recall using cutpoint
