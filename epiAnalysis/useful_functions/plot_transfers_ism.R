@@ -184,7 +184,7 @@ plot_transfers_ism <- function(from_part,
       plot_of_this <-
         ggplot2::ggplot(data = dNew,
                         mapping = ggplot2::aes_(x = dNew$axis_vals, y = dNew$fit)) +
-        ggplot2::ylim(yllimit, yulimit) +ggplot2::xlim(xllimit, xulimit) +
+        ggplot2::xlim(xllimit, xulimit) +
         ggplot2::geom_errorbar(ggplot2::aes_(
           x = dNew$axis_vals,
           ymin = dNew$lower_CI,
