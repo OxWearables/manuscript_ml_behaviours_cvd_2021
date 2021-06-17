@@ -188,14 +188,14 @@
       "Package": "epicoda",
       "Version": "0.0.0.9000",
       "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteUsername": "activityMonitoring",
-      "RemoteRepo": "epicoda",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "39527042864ecbc9385feaf68b055ecebdc75c4b",
-      "RemoteHost": "api.github.com",
       "Remotes": "tystan/deltacomp",
-      "Hash": "b58bd77f1b2986302af482b09b4a26b5"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "epicoda",
+      "RemoteUsername": "activityMonitoring",
+      "RemoteRef": "fedd06114d664cfcd4087e6620b672e111f37ef0",
+      "RemoteSha": "fedd06114d664cfcd4087e6620b672e111f37ef0",
+      "Hash": "a9f41e75531b2ec595ee0ba51f15fd99"
     },
     "etm": {
       "Package": "etm",
