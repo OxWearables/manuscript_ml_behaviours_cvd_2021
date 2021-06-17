@@ -7,7 +7,7 @@ library(gtools)
 library(EValue)
 library(xts)
 library(ggplot2)
-library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "add-support-for-multiple-strata")
+library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "add-support-for-multiple-strata") i.e. hash used was fedd06114d664cfcd4087e6620b672e111f37ef0
 
 ## Source helper functions---------------------------------------------------
 source("epiAnalysis/useful_functions/med_and_iqr.R")
@@ -245,7 +245,7 @@ death_model <- comp_model(
 ## Participants without zero values ---------------------------------------
 df_zf <- df
 for (label in comp_labels) {
-  df_zf <- df_zf[df_zf[, label] != 0,]
+  df_zf <- df_zf[df_zf[, label] != 0, ]
 }
 zf_model <- comp_model(
   type = "cox",
@@ -292,8 +292,8 @@ main_sensitivity_model <-
   )
 
 ## Women, men---------------------------------------------------------
-df_women <- df[df$sex == "Female", ]
-df_men <- df[df$sex == "Male", ]
+df_women <- df[df$sex == "Female",]
+df_men <- df[df$sex == "Male",]
 
 women_model <-  comp_model(
   type = "cox",
@@ -323,8 +323,8 @@ men_model <- comp_model(
 )
 
 ## Younger, older-------------------------------------------------------
-df_under_65 <- df[df$age_entry < 365.25 * 65, ]
-df_over_65 <- df[df$age_entry > 365.25 * 65, ]
+df_under_65 <- df[df$age_entry < 365.25 * 65,]
+df_over_65 <- df[df$age_entry > 365.25 * 65,]
 
 under_65_model <- comp_model(
   type = "cox",
@@ -353,8 +353,7 @@ over_65_model <- comp_model(
   comp_labels = comp_labels,
   rounded_zeroes = TRUE
 )
-
-## Negative control outcome -----------------------------------------
+## Negative control---------------------------------
 neg_control_model <-
   comp_model(
     type = "cox",
@@ -362,7 +361,7 @@ neg_control_model <-
     outcome = Surv(
       time = df$age_entry,
       time2 = df$neg_control_acc_exit,
-      event = df$neg_control_event_acc,
+      event = df$neg_control_event_acc
     ),
     data = df,
     comp_labels = comp_labels,
@@ -630,22 +629,23 @@ neg_control_tc <-
     rounded_zeroes = TRUE
   )
 
-model_list <-
-  list(
-    "minimally_adjusted",
-    "add_adj_bmi",
-    "death",
-    "women",
-    "men",
-    "under_65",
-    "over_65",
-    "only_fu",
-    "main_sensitivity",
-    "zf",
-    "neg_control"
-  )
+model_list <- list(
+  "minimally_adjusted",
+  "add_adj_bmi",
+  "add_adj_bmi_cat",
+  "add_adj_bmi_strat",
+  "death",
+  "women",
+  "men",
+  "under_65",
+  "over_65",
+  "only_fu",
+  "main_sensitivity",
+  "zf",
+  "neg_control"
+)
 
-tab_coef_coords <- tab_coef[(nrow(tab_coef) - 3): nrow(tab_coef), ]
+tab_coef_coords <- tab_coef[(nrow(tab_coef) - 3):nrow(tab_coef),]
 for (model in model_list) {
   tc <- get(paste0(model, "_tc"))
   mod <- get(paste0(model, "_model"))
@@ -658,16 +658,22 @@ for (model in model_list) {
       format(round(tc$`97.5 %`, digits = 2), nsmall = 2),
       ")"
     )
-  tab_coef_coords[, paste0("Estimate: ", model)] <- new_tab_coef_col[(length(new_tab_coef_col) - 3):length(new_tab_coef_col) ]
+  tab_coef_coords[, paste0("Estimate: ", model)] <-
+    new_tab_coef_col[(length(new_tab_coef_col) - 3):length(new_tab_coef_col)]
 
   # Visual test
   print(summary(mod)$conf.int["ilr_1_sleep_vs_parts_2_to_4", "exp(coef)"])
-  print(tc$fit[nrow(tc)-3])
+  print(tc$fit[nrow(tc) - 3])
 }
 
-write.csv(tab_coef_coords,
-          paste0("epiAnalysis/plots/", name_of_current_run, "all_model_params.csv"))
-
+write.csv(
+  tab_coef_coords,
+  paste0(
+    "epiAnalysis/plots/",
+    name_of_current_run,
+    "_all_model_params.csv"
+  )
+)
 
 # Plotting ----------------------------------------------------------------
 ## Forest plots ------------------------------------------------------------
@@ -826,18 +832,17 @@ colnames(numbers_df) <-
   )
 
 ### Iterate over model pairs generating the relevant plot and adding detail to numbers_df -------------------
-model_pair_list <-
-  list(
-    list("under_65", "over_65"),
-    list("women", "men"),
-    list("main", "minimally_adjusted"),
-    list("main", "add_adj_bmi"),
-    list("main", "add_adj_bmi_cat"),
-    list("main", "add_adj_bmi_strat"),
-    list("main", "death"),
-    list("main", "zf"),
-    list("main", "neg_control")
-  )
+model_pair_list <- list(
+  list("under_65", "over_65"),
+  list("women", "men"),
+  list("main", "minimally_adjusted"),
+  list("main", "add_adj_bmi"),
+  list("main", "add_adj_bmi_cat"),
+  list("main", "add_adj_bmi_strat"),
+  list("main", "death"),
+  list("main", "zf"),
+  list("main", "neg_control")
+)
 
 
 for (pair in model_pair_list) {
@@ -1061,14 +1066,14 @@ mm <- predict_fit_and_ci(main_model,
                          comp_list[["20 min/day more MVPA"]],
                          comp_labels = comp_labels,
                          terms = TRUE)
-bmi_adj <- predict_fit_and_ci(add_adj_bmi_model,
+bmi_adj <- predict_fit_and_ci(add_adj_bmi_strat_model,
                               comp_list[["20 min/day more MVPA"]],
                               comp_labels = comp_labels,
                               terms = TRUE)
 
 d <-
   rbind(mm[, c("fit", "lower_CI", "upper_CI")], bmi_adj[, c("fit", "lower_CI", "upper_CI")])
-rownames(d) <- c("Main model", "Additionally adjusted for BMI")
+rownames(d) <- c("Main model", "Additionally stratified by BMI")
 write.csv(d,
           paste0(
             "epiAnalysis/plots/",
