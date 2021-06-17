@@ -1,6 +1,7 @@
 # THE AIM OF THIS FILE IS TO ACT AS A CONDUCTOR FOR THE OTHER R SCRIPTS - IE TO RUN THEM IN ORDER
 # The open sinks and reset sinks aims to capture any console output from the run as we may not see this
-# as it runs.
+# as it runs. The environment is also cleared after each script has run to ensure each script runs as expected
+# and uses only datasets it reads itself.
 
 # SET NAME OF CURRENT RUN==============================================
 name_of_current_run <- paste0(Sys.Date(), "check_messages")

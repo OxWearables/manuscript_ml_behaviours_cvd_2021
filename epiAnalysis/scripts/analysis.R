@@ -7,7 +7,7 @@ library(gtools)
 library(EValue)
 library(xts)
 library(ggplot2)
-library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "add-support-for-multiple-strata") i.e. hash used was fedd06114d664cfcd4087e6620b672e111f37ef0
+library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "fedd06114d664cfcd4087e6620b672e111f37ef0")
 
 ## Source helper functions---------------------------------------------------
 source("epiAnalysis/useful_functions/med_and_iqr.R")
