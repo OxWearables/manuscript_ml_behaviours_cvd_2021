@@ -15,8 +15,12 @@ data/*
 *.Rhistory*
 *console_output*
 *output.txt
-**/output.txt
+**/*output.txt
+**/*ouput.txt
 writing
 *.html
 epiAnalysis/scripts/checking_coxzph_error.R
 warnings.txt
+**/*.drawio
+**/checking_truncated_distributions.R
+**/summary_coxph_*.txt
