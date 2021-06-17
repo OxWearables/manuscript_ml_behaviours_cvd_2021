@@ -24,3 +24,4 @@ warnings.txt
 **/*.drawio
 **/checking_truncated_distributions.R
 **/summary_coxph_*.txt
+**/*-processCmds.*
