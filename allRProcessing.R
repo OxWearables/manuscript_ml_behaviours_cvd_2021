@@ -1,5 +1,9 @@
+# THE AIM OF THIS FILE IS TO ACT AS A CONDUCTOR FOR THE OTHER R SCRIPTS - IE TO RUN THEM IN ORDER
+# The open sinks and reset sinks aims to capture any console output from the run as we may not see this
+# as it runs.
+
 # SET NAME OF CURRENT RUN==============================================
-name_of_current_run <- paste0(Sys.Date(), "_update_BMI_run_")
+name_of_current_run <- paste0(Sys.Date(), "check_messages")
 
 # SET UP FUNCTIONS FOR SINKING CONSOLE OUTPUT AND CLEARING AFTER EACH================================
 open_sinks <- function(filestart){
