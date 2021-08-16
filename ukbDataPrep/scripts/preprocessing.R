@@ -47,7 +47,6 @@ participant <- participant[!is.na(participant$EndTimWear) , ]
 # READ IN ACCELEROMETER DATA==============================================================================================
 acc <- fread(
   "ukbDataPrep/inputData/ukb-acc-sep.csv",
-  #XXX EDIT THIS
   stringsAsFactors = FALSE,
   data.table = FALSE,
   check.names = TRUE,
@@ -88,19 +87,6 @@ exclusions <-
     )
   )
 
-exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
-all <-
-  all[(all$DatQualGoodWearTim == "Yes"), ]
-exclusions <-
-  rbind(
-    exclusions,
-    data.frame(
-      "Exclusion" = "Poor wear time UKB",
-      "Number_excluded" = nrow(exc),
-      "Number_remaining" = nrow(all)
-    )
-  )
-
 exc <-
   all[(all$ReadExcess...8GravCalibr > 0.01 * all$TotalDataRead) |
         (all$ReadExcess...8GravCalibr.1 > 0.01 * all$TotalDataRead), ]
@@ -116,6 +102,20 @@ exclusions <-
       "Number_remaining" = nrow(all)
     )
   )
+
+exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
+all <-
+  all[(all$DatQualGoodWearTim == "Yes"), ]
+exclusions <-
+  rbind(
+    exclusions,
+    data.frame(
+      "Exclusion" = "Poor wear time UKB",
+      "Number_excluded" = nrow(exc),
+      "Number_remaining" = nrow(all)
+    )
+  )
+
 
 exc <- all[(all$acc.overall.avg >= 100), ]
 all <- all[(all$acc.overall.avg < 100), ]
@@ -227,7 +227,7 @@ CVD_death_any_cv_death <-
     any(grepl("I20|I21|I22|I23|I24|I25|I6", x))), ]
 
 
-# ADD CENSORING FOR MORTAILTY=====================================================================================================
+# ADD CENSORING FOR MORTALITY=====================================================================================================
 all$censor_mortality <- "28/02/2021"
 all$follow_up_mortality <- as.Date(all$censor_mortality, "%d/%m/%Y")
 all$follow_up_mortality[all$died == 1] <-
