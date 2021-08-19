@@ -14,6 +14,6 @@ The classifier developed is available as part of the [biobankAccelerometerAnalys
 We assessed performance using the Leave-One-Participant-Out approach, also described in the above tutorial. Metrics are described in detail in the manuscript. The `scripts/reportingPerformance` folder provides relevant scripts. 
 
 Notable aspects of performance assessment included:
-- reporting performance of a model trained in all participants only in participants aged > 38 years
-- training a model in participants aged > 38 years only, to compare its performance with performance of the overall model in this group of participants, which more closely matches the age group of UK Biobank participants (reported in the Supplementary Material of the paper)
+- reporting performance of a model trained in all participants only in participants aged > 38 years (more closely matches the age group of UK Biobank participants)
+- training a model in participants aged > 38 years only, to compare its performance with performance of the overall model in this group of participants (reported in the Supplementary Material of the paper)
 - a comparison with the standard MVPA cut-point at identifying MVPA
