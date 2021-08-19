@@ -1,10 +1,12 @@
 # ukbDataPrep
 
-This subfolder contains materials related to preprocessing and merging UK Biobank data. Data preparation of UK Biobank data used the [ukb_download_and_prep_template tool](https://github.com/activityMonitoring/ukb_download_and_prep_template) and [its documentation](https://ukb-download-and-prep-template.readthedocs.io/en/latest/), alongside UK Biobank's data download helper functions.
+This subfolder contains materials related to preprocessing and merging UK Biobank data.
+
+Data preparation of UK Biobank data used the [ukb_download_and_prep_template tool](https://github.com/activityMonitoring/ukb_download_and_prep_template) and [its documentation](https://ukb-download-and-prep-template.readthedocs.io/en/latest/), alongside UK Biobank's data download helper functions.
 
  
-## Extracting, merging and recoding variables in UK Biobank files
-The first step is to get a merged file (`participant.csv`) containing the required UK Biobank columns, recoded to meaningful categories as appropriate, and also containing relevant health outcomes data.
+## Automated extraction, merging, and recoding of variables
+The first step is to get a merged file (`participant.csv`) containing the required UK Biobank columns, recoded to meaningful categories as appropriate, and also containing relevant health outcomes data. Specifically:
 
 Columns were extracted 01.06.21 using: 
 `../ukb_download_and_prep_template/download/helpers/linux_tools/ukbconv inputData/ukb41733.enc_ukb csv -ihelpers/analysisCols2705.txt`  
