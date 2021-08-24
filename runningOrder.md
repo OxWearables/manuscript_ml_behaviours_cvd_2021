@@ -13,5 +13,5 @@ Note that there are many earlier steps to processing: processing CAPTURE-24 data
 
 ## Additional Results Generated in Python 
 
-1. On BMRC system, source skylake environment. 
+1. On BMRC system, source skylake environment (on other systems, environment can be based on files under environments/pip_envs) 
 2. Run: classifierDevelopment/scripts/reportingPerformance/produce_performance_summaries.py
