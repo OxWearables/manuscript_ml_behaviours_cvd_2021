@@ -28,3 +28,6 @@ The data was then processed using:
 `python ../ukb_download_and_prep_template/filterUKB.py inputData/ukb41733.csv -o inputData/ukb41733_recoded_010621.csv --columnsFile helpers/columns.json --datafile ../ukb_download_and_prep_template/Data_Dictionary_Showcase.csv --codefile ../ukb_download_and_prep_template/Codings_Showcase.csv`
 
 `python ../ukb_download_and_prep_template/addNewHES.py inputData/ukb41733_recoded_010621.csv inputData/hesin_all.csv inputData/participant.csv helpers/icdGroups2905.json --incident_prevalent True --date_column EndTimWear`
+
+An additional processing was run on 14.01.2022 to update the negative control analysis: 
+`python ../ukb_download_and_prep_template/addNewHES.py inputData/ukb41733_recoded_010621.csv inputData/hesin_all.csv inputData/participant_new_nc_20220114.csv helpers/icdGroupsUpdateNC.json --incident_prevalent True --date_column EndTimWear`
