@@ -25,7 +25,7 @@ print(paste0("There were ", n_old - n_new , " duplicate death records"))
 # READ IN PARTICIPANT DATA=============================================================================================
 participant <-
   fread(
-    "ukbDataPrep/inputData/participant.csv",
+    "ukbDataPrep/inputData/participant_new_nc_20220114.csv",
     stringsAsFactors = FALSE,
     data.table = FALSE,
     check.names = TRUE,
@@ -47,7 +47,6 @@ participant <- participant[!is.na(participant$EndTimWear) , ]
 # READ IN ACCELEROMETER DATA==============================================================================================
 acc <- fread(
   "ukbDataPrep/inputData/ukb-acc-sep.csv",
-  #XXX EDIT THIS
   stringsAsFactors = FALSE,
   data.table = FALSE,
   check.names = TRUE,
@@ -88,19 +87,6 @@ exclusions <-
     )
   )
 
-exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
-all <-
-  all[(all$DatQualGoodWearTim == "Yes"), ]
-exclusions <-
-  rbind(
-    exclusions,
-    data.frame(
-      "Exclusion" = "Poor wear time UKB",
-      "Number_excluded" = nrow(exc),
-      "Number_remaining" = nrow(all)
-    )
-  )
-
 exc <-
   all[(all$ReadExcess...8GravCalibr > 0.01 * all$TotalDataRead) |
         (all$ReadExcess...8GravCalibr.1 > 0.01 * all$TotalDataRead), ]
@@ -117,8 +103,22 @@ exclusions <-
     )
   )
 
-exc <- all[(all$acc.overall.avg >= 100), ]
-all <- all[(all$acc.overall.avg < 100), ]
+exc <- all[(all$DatQualGoodWearTim != "Yes"), ]
+all <-
+  all[(all$DatQualGoodWearTim == "Yes"), ]
+exclusions <-
+  rbind(
+    exclusions,
+    data.frame(
+      "Exclusion" = "Poor wear time UKB",
+      "Number_excluded" = nrow(exc),
+      "Number_remaining" = nrow(all)
+    )
+  )
+
+
+exc <- all[(all$acc.overall.avg >= 100), ] # This doesn't cope well with the two people who have NA values in acc BUT the numbers in the paper are all correct
+all <- all[(all$acc.overall.avg < 100), ] # This doesn't cope well with the two people who have NA values in acc
 exclusions <-
   rbind(
     exclusions,
@@ -159,31 +159,31 @@ exclusions <-
 ## Self-reported at baseline:
 exc <-
   all[((
-    all$Vascular.heartProblemDiagnosDoct_0_0  %in% c("Heart attack", "Stroke")
+    all$Vascular.heartProblemDiagnosDoct_0_0 %in% c("Heart attack", "Stroke")
   ) |
     (
-      all$Vascular.heartProblemDiagnosDoct_0_1  %in% c("Heart attack", "Stroke")
+      all$Vascular.heartProblemDiagnosDoct_0_1 %in% c("Heart attack", "Stroke")
     ) |
     (
       all$Vascular.heartProblemDiagnosDoct_0_2 %in% c("Heart attack", "Stroke")
     ) |
     (
-      all$Vascular.heartProblemDiagnosDoct_0_3  %in% c("Heart attack", "Stroke")
+      all$Vascular.heartProblemDiagnosDoct_0_3 %in% c("Heart attack", "Stroke")
     )
   ), ]
 
 all <-
   all[!((
-    all$Vascular.heartProblemDiagnosDoct_0_0  %in% c("Heart attack", "Stroke")
+    all$Vascular.heartProblemDiagnosDoct_0_0 %in% c("Heart attack", "Stroke")
   ) |
     (
-      all$Vascular.heartProblemDiagnosDoct_0_1  %in% c("Heart attack", "Stroke")
+      all$Vascular.heartProblemDiagnosDoct_0_1 %in% c("Heart attack", "Stroke")
     ) |
     (
       all$Vascular.heartProblemDiagnosDoct_0_2 %in% c("Heart attack", "Stroke")
     ) |
     (
-      all$Vascular.heartProblemDiagnosDoct_0_3  %in% c("Heart attack", "Stroke")
+      all$Vascular.heartProblemDiagnosDoct_0_3 %in% c("Heart attack", "Stroke")
     )
   ), ]
 exclusions <-
@@ -226,8 +226,15 @@ CVD_death_any_cv_death <-
   relevant_deaths_any_cv_death[apply(relevant_deaths_any_cv_death, 1, function(x)
     any(grepl("I20|I21|I22|I23|I24|I25|I6", x))), ]
 
+# ADD A COLUMN FOR NC EVENTS first recorded in death data======================================================================================================
+candidate_nc <- all[(all$died == 1) & (all$accidents_new == ""), ]
+relevant_deaths_nc <- death_cause[death_cause$eid %in% candidate_nc$eid, ]
+nc_death <- relevant_deaths_nc[apply(relevant_deaths_nc, 1, function(x)
+       any(grepl("V0|V2|V3|V4|V5|V6|V7|V8|V9|W2|W3|W4|W5|W6|W7|W8|W9|X0|X1|X2|X3|X4|X5", x))), ]
+all$nc.incident_at_death <- 0
+all$nc.incident_at_death[all$eid %in% nc_death$eid] <- 1
 
-# ADD CENSORING FOR MORTAILTY=====================================================================================================
+# ADD CENSORING FOR MORTALITY=====================================================================================================
 all$censor_mortality <- "28/02/2021"
 all$follow_up_mortality <- as.Date(all$censor_mortality, "%d/%m/%Y")
 all$follow_up_mortality[all$died == 1] <-
@@ -274,27 +281,29 @@ all$CVD_event[all$eid %in% CVs] <- 1
 
 
 # ADD IN FOLLOW UP FOR NEGATIVE CONTROL ===========================================================================================================================================
-# Note the negative control is in hospital records only
+## ADD FOLLOW UP FOR NEGATIVE CONTROL - FOLLOW UP ======================================================================
 all$follow_up_neg_control_acc <- as.Date(all$censored, "%d/%m/%Y")
-all$follow_up_neg_control_acc[all$accidents_without_PA_link.incident == 1] <-
-  pmin(
-    all$follow_up_neg_control_acc[all$accidents_without_PA_link.incident == 1],
-    as.Date(all$accidents_without_PA_link[all$accidents_without_PA_link.incident == 1], "%Y-%m-%d")
-  )
+all$follow_up_neg_control_acc[all$accidents_new.incident == 1] <- pmin(
+     all$follow_up_neg_control_acc[all$accidents_new.incident == 1],
+     as.Date(all$accidents_new[all$accidents_new.incident == 1], "%Y-%m-%d")
+   )
 all$follow_up_neg_control_acc[all$died == 1] <-
-  pmin(all$follow_up_neg_control_acc[all$died == 1],
-       as.Date(all$date_of_death[all$died == 1],  "%d/%m/%Y"))
+   pmin(all$follow_up_neg_control_acc[all$died == 1],
+        as.Date(all$date_of_death[all$died == 1],  "%d/%m/%Y"))
 
-
-# ADD IN A NEG CONTROL STATUS BIOMARKER AT EXIT===========================================================================================================================
+# # ADD IN A NEG CONTROL STATUS BIOMARKER AT EXIT===========================================================================================================================
 all$neg_control_event_acc <- 0
+# First process people who have incident NC at death
+all_nc_incident_at_death <- all[all$nc.incident_at_death == 1, ]
+NCs_at_death <- all_nc_incident_at_death$eid[all_nc_incident_at_death$follow_up == as.Date(all_nc_incident_at_death$date_of_death,  "%d/%m/%Y")]
+all$neg_control_event_acc[all$eid %in% NCs_at_death] <- 1
 
-# We can't just take accidents_without_PA_link.incident as the records in fact extend past the last known record.
+# We can't just take accidents_new.incident as the records in fact extend past the last known record.
 all_neg_control_acc_incident <-
-  all[all$accidents_without_PA_link.incident == 1, ]
+   all[all$accidents_new.incident == 1, ]
 NCs <-
-  all_neg_control_acc_incident$eid[all_neg_control_acc_incident$follow_up_neg_control_acc == as.Date(all_neg_control_acc_incident$accidents_without_PA_link,
-                                                                                                     "%Y-%m-%d")]
+   all_neg_control_acc_incident$eid[all_neg_control_acc_incident$follow_up_neg_control_acc == as.Date(all_neg_control_acc_incident$accidents_new,
+                                                                                                      "%Y-%m-%d")]
 all$neg_control_event_acc[all$eid %in% NCs] <- 1
 
 # ADD DATE OF BIRTH===========================================================================================================================================

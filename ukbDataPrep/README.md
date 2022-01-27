@@ -26,6 +26,9 @@ The data was then processed using:
 
 `python ../ukb_download_and_prep_template/addNewHES.py inputData/ukb41733_recoded_010621.csv inputData/hesin_all.csv inputData/participant.csv helpers/icdGroups2905.json --incident_prevalent True --date_column EndTimWear`
 
+An additional processing was run on 14.01.2022 to update the negative control analysis: 
+`python ../ukb_download_and_prep_template/addNewHES.py inputData/ukb41733_recoded_010621.csv inputData/hesin_all.csv inputData/participant_new_nc_20220114.csv helpers/icdGroupsUpdateNC.json --incident_prevalent True --date_column EndTimWear`
+
 ## Additional processing 
 The second step is to carry out additional preprocessing, including that not directly supported by the `ukb_download_and_prep_template` tool. 
 
@@ -37,5 +40,4 @@ It includes:
 - Combining data on deaths with the other health outcomes data to produce overall censoring variables for the different outcomes considered. This is quite involved as the death and health outcome data have different censoring dates, which also differ between the nations of the UK.  
 - Recategorising variables to categorisation used in the final analyses. 
 - Performing exclusions in preparation for sensitivity analyses.
-
 

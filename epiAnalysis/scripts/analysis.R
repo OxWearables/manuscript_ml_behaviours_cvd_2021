@@ -1,28 +1,26 @@
 # Preparation----------------------------------------------------------------
 ## Load packages -----------------------------------------------------------
 library(survival)
-library(Epi)
 library(rlist)
 library(gtools)
 library(EValue)
-library(xts)
 library(ggplot2)
 library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "fedd06114d664cfcd4087e6620b672e111f37ef0")
 
 ## Source helper functions---------------------------------------------------
 source("epiAnalysis/useful_functions/med_and_iqr.R")
 source("epiAnalysis/useful_functions/arrange_plots_matrix.R")
-source("epiAnalysis/useful_functions/forest_plot_examples_with_evals.R")  # This still needs tidying
+source("epiAnalysis/useful_functions/forest_plot_examples_with_evals.R")
 source("epiAnalysis/useful_functions/compare_plot2.R")
 source("epiAnalysis/useful_functions/compare_plot3.R")
 source("epiAnalysis/useful_functions/compare_plot_linear.R")
 
 ## Load data ---------------------------------------------------------------
 df <-  readRDS(paste0(
-  "epiAnalysis/inputData/",
-  name_of_current_run,
-  "_ready_to_use.RDS"
-))
+   "epiAnalysis/inputData/",
+   name_of_current_run,
+   "_ready_to_use.RDS"
+ ))
 
 df_only_fu <-
   readRDS(paste0(
@@ -354,16 +352,17 @@ over_65_model <- comp_model(
   rounded_zeroes = TRUE
 )
 ## Negative control---------------------------------
+df_nc <- df[df$accidents_new.prevalent == 0, ]
 neg_control_model <-
   comp_model(
     type = "cox",
     covariates = c("strata(sex)", covs) ,
     outcome = Surv(
-      time = df$age_entry,
-      time2 = df$neg_control_acc_exit,
-      event = df$neg_control_event_acc
+      time = df_nc$age_entry,
+      time2 = df_nc$neg_control_acc_exit,
+      event = df_nc$neg_control_event_acc
     ),
-    data = df,
+    data = df_nc,
     comp_labels = comp_labels,
     rounded_zeroes = TRUE
   )
@@ -620,11 +619,11 @@ neg_control_tc <-
     scale_type = "exp" ,
     covariates = c("strata(sex)", covs) ,
     outcome = Surv(
-      time = df$age_entry,
-      time2 = df$neg_control_acc_exit,
-      event = df$neg_control_event_acc,
+      time = df_nc$age_entry,
+      time2 = df_nc$neg_control_acc_exit,
+      event = df_nc$neg_control_event_acc,
     ),
-    data = df,
+    data = df_nc,
     comp_labels = comp_labels,
     rounded_zeroes = TRUE
   )

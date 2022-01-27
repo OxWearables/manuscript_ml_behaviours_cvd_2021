@@ -4,7 +4,7 @@
 # and uses only datasets it reads itself.
 
 # SET NAME OF CURRENT RUN==============================================
-name_of_current_run <- paste0(Sys.Date(), "check_messages")
+name_of_current_run <- paste0(Sys.Date(), "update_negative_control")
 
 # SET UP FUNCTIONS FOR SINKING CONSOLE OUTPUT AND CLEARING AFTER EACH================================
 open_sinks <- function(filestart){
