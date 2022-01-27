@@ -285,7 +285,7 @@ all$CVD_event[all$eid %in% CVs] <- 1
 all$follow_up_neg_control_acc <- as.Date(all$censored, "%d/%m/%Y")
 all$follow_up_neg_control_acc[all$accidents_new.incident == 1] <- pmin(
      all$follow_up_neg_control_acc[all$accidents_new.incident == 1],
-     as.Date(all$accidents_without_PA_link[all$accidents_new.incident == 1], "%Y-%m-%d")
+     as.Date(all$accidents_new[all$accidents_new.incident == 1], "%Y-%m-%d")
    )
 all$follow_up_neg_control_acc[all$died == 1] <-
    pmin(all$follow_up_neg_control_acc[all$died == 1],
