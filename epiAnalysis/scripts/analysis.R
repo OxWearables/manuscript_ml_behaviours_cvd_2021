@@ -1,11 +1,9 @@
 # Preparation----------------------------------------------------------------
 ## Load packages -----------------------------------------------------------
 library(survival)
-#library(Epi)
 library(rlist)
 library(gtools)
 library(EValue)
-#library(xts)
 library(ggplot2)
 library(epicoda) # Installed from Github using devtools::install_github("activityMonitoring/epicoda", ref = "fedd06114d664cfcd4087e6620b672e111f37ef0")
 
