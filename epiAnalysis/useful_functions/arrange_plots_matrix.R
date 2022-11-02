@@ -1,18 +1,10 @@
 plot_maxi_matrix_transfers <-
   function(comp_model,
-           fixed_values = NULL,
-           part_1 = NULL,
            comp_labels,
            yllimit = NULL,
            yulimit = NULL,
            plot_log = FALSE,
-           lower_quantile = 0.05,
-           upper_quantile = 0.95,
-           units = "unitless",
-           specified_units = NULL,
-           terms = TRUE,
            granularity = 10000,
-           point_specification = ggplot2::geom_point(size = 2),
            theme = NULL,
            plotstitle = NULL) {
     #------------------------------------------------------------------
@@ -22,13 +14,9 @@ plot_maxi_matrix_transfers <-
     type <- epicoda:::process_model_type(comp_model)
 
     # Labels
-    if (!is.null(part_1)) {
-      comp_labels <- alter_order_comp_labels(comp_labels, part_1)
-    }
     transf_labels <-
       transf_labels(comp_labels,
-                    transformation_type = "ilr",
-                    part_1 = part_1)
+                    transformation_type = "ilr")
     # Datasets
     dataset1 <- get_dataset_from_model(model = comp_model, comp_labels = comp_labels, transf_labels = transf_labels, type = type)
 
@@ -59,14 +47,12 @@ plot_maxi_matrix_transfers <-
           granularity = granularity,
           units = "hr/day",
           comp_labels = comp_labels,
-          terms = terms,
           plot_log = plot_log,
           yllimit = yllimit,
           yulimit = yulimit,
           xllimit = xllimit,
           xulimit = xulimit,
           y_label = y_label,
-          fixed_values = fixed_values,
           point_specification = ggplot2::geom_point(size = 1.5)
         )
         assign(paste0("p_", comp_labels[i], "_", comp_labels[j], "_model1"), pfirst )
