@@ -34,7 +34,7 @@ df <- readRDS(# analytic dataset
 
 
 # NAME OF CURRENT RUN UPDATE FOR THESIS==============================================================
-name_of_current_run <- "2022-06-14-rerun-descriptions-"
+name_of_current_run <- "2022-06-22"
 
 # RESTRICT TO PATTICIPANTS IN THE FINAL ANALYTIC SAMPLE==============================================
 a$eid <- gsub("_90001_0_0.gz", "", a$eid)
@@ -44,6 +44,21 @@ a <- merge(a, participant, by = "eid")
 a <- merge(a, df[, c("age_entry", "eid")], by = "eid")
 
 a <- merge(a, extra_cols, by = "eid")
+
+# TIME OF YEAR PLOT===================================================================================
+a$month <- lubridate::month(a$file.startTime)
+a$dst <- "UNCLEAR"
+a$dst[a$month %in% c(4, 5, 6, 7, 8, 9)] <- "summer"
+a$dst[a$month %in% c(11, 12, 1, 2)] <- "winter"
+a$dst <- as.factor(a$dst)
+plotAverageDayGroupWise(
+  a,
+  "dst",
+  "sleep.hourOfDay.",
+  ".avg",
+  yAxisLabel = "sleep",
+  title ="Checking DST variable correctly incorporated"
+)
 
 
 # PREPROCESSING OF BEHAVIOURAL VARIABLES =============================================================
@@ -115,7 +130,7 @@ for (group in c(
   }
 
   if (group == "NapDureDay") {
-    tit <- "Nap during day"
+    tit <- "Napping during the day"
   }
 
   # PRINTING ======================================================================================
@@ -145,24 +160,24 @@ for (group in c(
   }
 
   # WRITE OUT COMBINED FIGURE ======================================================================
-  svg(
-    paste0(
-      "ukbAccProcessing/plots/",
-      name_of_current_run,
-      "_face_validity_",
-      group,
-      ".svg",
-      sep = ""
-    ),
-    width = 10,
-    height = 4
-  )
-
-  gridExtra::grid.arrange(
-    grobs = list(p_MVPA, p_light, p_sedentary, p_sleep),
-    layout_matrix = cbind(c(4, 3), c(2, 1))
-  )
-  dev.off()
+  # svg(
+  #   paste0(
+  #     "ukbAccProcessing/plots/",
+  #     name_of_current_run,
+  #     "_face_validity_",
+  #     group,
+  #     ".svg",
+  #     sep = ""
+  #   ),
+  #   width = 10,
+  #   height = 4
+  # )
+  #
+  # gridExtra::grid.arrange(
+  #   grobs = list(p_MVPA, p_light, p_sedentary, p_sleep),
+  #   layout_matrix = cbind(c(4, 3), c(2, 1))
+  # )
+  # dev.off()
 
   # WRITE OUT SLEEP PLOT===========================================================================
   svg(
@@ -174,14 +189,15 @@ for (group in c(
       ".svg",
       sep = ""
     ),
-    width = 20,
-    height = 8
+    width = 10,
+    height = 4
   )
   print(p_sleep)
   dev.off()
 }
 
-# GROUPINGS FOR WHICH USE WEEKDAYS ONLY==============================================================================
+# GROUPINGS FOR WHICH USE UNDER 60s and WEEKDAYS ONLY==============================================================================
+dat <- a[a$age_entry < 365.25 * 60,] # Restrict to under 60s
 for (group in c("JobInvolveHeavyManualPhysicalWork",
                   "JobInvolveWalkingStanding")) {
     dat[, group] <- plyr::revalue(dat[, group], c("Prefer not to answer" = NA, "Do not know" = NA))
@@ -241,25 +257,25 @@ for (group in c("JobInvolveHeavyManualPhysicalWork",
       )
     }
 
-    # WRITE OUT COMBINED FIGURE==============================
-    svg(
-      paste0(
-        "ukbAccProcessing/plots/",
-        name_of_current_run,
-        "_face_validity_weekday",
-        group,
-        ".svg",
-        sep = ""
-      ),
-      width = 10,
-      height = 4
-    )
-
-    gridExtra::grid.arrange(
-      grobs = list(p_MVPA, p_light, p_sedentary, p_sleep),
-      layout_matrix = cbind(c(4, 3), c(2, 1))
-    )
-    dev.off()
+    # # WRITE OUT COMBINED FIGURE==============================
+    # svg(
+    #   paste0(
+    #     "ukbAccProcessing/plots/",
+    #     name_of_current_run,
+    #     "_face_validity_weekday",
+    #     group,
+    #     ".svg",
+    #     sep = ""
+    #   ),
+    #   width = 10,
+    #   height = 4
+    # )
+    #
+    # gridExtra::grid.arrange(
+    #   grobs = list(p_MVPA, p_light, p_sedentary, p_sleep),
+    #   layout_matrix = cbind(c(4, 3), c(2, 1))
+    # )
+    # dev.off()
 
     # WRITE OUT FIGURES FOR EACH BEHAVIOURS==================
     svg(
@@ -271,8 +287,8 @@ for (group in c("JobInvolveHeavyManualPhysicalWork",
         ".svg",
         sep = ""
       ),
-      width = 20,
-      height = 8
+      width = 10,
+      height = 4
     )
     print(p_light)
     dev.off()
@@ -285,9 +301,10 @@ for (group in c("JobInvolveHeavyManualPhysicalWork",
         ".svg",
         sep = ""
       ),
-      width = 20,
-      height = 8
+      width = 10,
+      height = 4
     )
     print(p_MVPA_zoomed)
     dev.off()
-  }
+}
+

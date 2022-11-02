@@ -39,7 +39,7 @@ plotAverageDayGroupWise <- function(data, group, exposurePrefix, exposureSuffix,
     labs(
          y = yAxisLabel,
          x = "Hour of Day",
-         title = tit)+
+         title = title)+
     theme(legend.title=element_blank()) # MAKE SURE LEGEND TITLE BLANK
 
 
