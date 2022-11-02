@@ -15,7 +15,7 @@ There are several parts to the analysis, described in separate subfolders:
 ## Code sharing
 Code is shared here with the intention of enabling the community to understand, verify, reproduce, and improve on our analyses.
 
-Code is intended to be "as run". It has not been verified or refined for re-use. For example, some functions have arguments/use cases which were never implemented, and testing/documentation has been limited to the requirements of this particular project.
+Code is intended to be "as run". It has not been verified or refined for re-use. For example, some functions have arguments/use cases which were never implemented (see for example: https://github.com/OxWearables/manuscript_ml_behaviours_cvd_2021/issues/4), and testing/documentation has been limited to the requirements of this particular project.
 
 However, the text points to several software packages we have developed to enable this project and future research. These packages have more extensive documentation and flexibility.
 
