@@ -35,7 +35,7 @@ df_sensitivity <-
     "_sensitivity.RDS"
   ))
 
-
+name_of_current_run <- paste0("remove_unnecessary_args_", Sys.Date())
 ## Set up values used throughout for comp_labels and covariates--------------------------------------------------------------------
 # Comp labels
 comp_labels <-
@@ -808,11 +808,8 @@ plot_maxi_matrix_transfers(
   yllimit = 0.8,
   yulimit = 1.3,
   plot_log = TRUE,
-  units = "hr/day",
-  granularity = 2000,
-  theme = NULL,
-  point_specification = ggplot2::geom_point(size = 1)
-)
+ granularity = 2000,
+ )
 dev.off()
 
 ## Matrix plots: model comparison-----------------------------------------
@@ -899,10 +896,7 @@ for (pair in model_pair_list) {
     yllimit = 0.8,
     yulimit = 1.3,
     plot_log =  TRUE,
-    units = "hr/day",
-    granularity = 1000,
-    point_specification = ggplot2::geom_point(size = 2)
-  )
+    granularity = 1000)
 
   dev.off()
 
@@ -926,10 +920,8 @@ compare_all_transfers_side_by_side_three(
   yllimit = 0.8,
   yulimit = 1.3,
   plot_log =  TRUE,
-  units = "hr/day",
   granularity = 1000,
-  point_specification = ggplot2::geom_point(size = 2)
-)
+ )
 dev.off()
 
 ### Write these models into df of numbers
@@ -979,12 +971,8 @@ compare_all_transfers_ism_side_by_side(
   yllimit = 0.8,
   yulimit = 1.3,
   plot_log =  TRUE,
-  lower_quantile = 0.05,
-  upper_quantile = 0.95,
-  units = "hr/day",
   granularity = 1000,
-  point_specification = ggplot2::geom_point(size = 2)
-)
+ )
 dev.off()
 
 ### Write numbers_df --------------------------------------------------
